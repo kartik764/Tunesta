@@ -1,0 +1,3 @@
+/* This file is for the production on netlify because our application is a single page application(SPA)and if the user goes on the login page or the signup page and the user refreshes that page, so netlify would ask for the login.html or the signup.html that does not exist in the program, our program only have index.html, so to make sure that if such situation comes then this file helps to handle that, but just saying that dont worry about finding that file, let just react handle it. */
+
+/* /index.html    200

@@ -1,0 +1,10 @@
+<svg width="300" height="100" viewBox="0 0 300 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circle with music note -->
+  <circle cx="50" cy="50" r="40" fill="black"/>
+  <path d="M50 25 v35 a10 10 0 1 1 -5 -8" fill="white"/>
+
+  <!-- Text "Tunesta" -->
+  <text x="100" y="60" font-family="Arial, Helvetica, sans-serif" font-size="40" fill="black" font-weight="bold">
+    Tunesta
+  </text>
+</svg>

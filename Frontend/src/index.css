@@ -1,0 +1,20 @@
+:root {
+  --background-dark: #0D0C1D; /* A very deep, dark purple-blue */
+  --glass-bg: rgba(255, 255, 255, 0.05); /* The semi-transparent background for our components */
+  --primary-accent: #9F7AEA; /* A soothing, muted purple for highlights */
+  --text-primary: #E2E8F0; /* Off-white, easier on the eyes than pure white */
+  --text-secondary: #A0AEC0; /* A light grey for less important text */
+  --shadow-color: rgba(159, 122, 234, 0.25); /* A shadow color derived from our accent */
+}
+
+body {
+    background-color: var(--background-dark);
+    color: var(--text-primary);
+    font-family: "Roboto", sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

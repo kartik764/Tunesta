@@ -1,0 +1,1734 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+/* The Classes that are made to better the UI */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.interactive-card {
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.album-card {
+  width: 120px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.album-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.album-card p {
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.album-card:hover {
+  transform: scale(1.05);
+}
+
+.play-overlay {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  background: #1db954;
+  border-radius: 50%;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.album-card:hover .play-overlay {
+  opacity: 1;
+}
+
+/* --- Login/Signup Form Styles --- */
+
+/* 1. The Inputs (Dark Gray Pills) */
+.auth-input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Semi-transparent white */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  /* Smooth rounded corners */
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-accent);
+  /* Glows purple on click */
+}
+
+/* 2. The Purple Button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-accent);
+  /* Your main purple color */
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  /* Fully rounded pill shape */
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  transform: scale(1.02);
+  /* Slight zoom effect */
+  filter: brightness(1.1);
+  /* Gets brighter */
+}
+
+/* 3. The Close 'X' Button */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
+/* 4. Links (Sign up / Log in text) */
+.auth-link {
+  color: var(--primary-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.interactive-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px 5px var(--shadow-color);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.close {
+  display: none;
+}
+
+.left {
+  width: 25vw;
+  padding: 10px;
+}
+
+.right {
+  width: 75vw;
+}
+
+.home ul li {
+  display: flex;
+  width: 14px;
+  gap: 15px;
+  list-style-type: none;
+  padding-top: 14px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 23px 14px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.heading img {
+  width: 17px;
+}
+
+.library {
+  min-height: 80vh;
+  position: relative;
+}
+
+.footer {
+  display: flex;
+  font-size: 10px;
+  gap: 12px;
+  position: absolute;
+  bottom: 1px;
+  padding: 10px 0;
+}
+
+.footer a {
+  color: gray;
+}
+
+.right {
+  margin: 16px 0;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header > * {
+  padding: 20px;
+}
+
+.MusicPlaylists {
+  padding: 16px;
+}
+
+.MusicPlaylists h1 {
+  padding: 16px;
+}
+
+.hamburger {
+  display: none;
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.cardcontainer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  margin: 30px;
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.hamburgercontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+  height: 200px;
+}
+
+.logo img {
+  width: 145px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.play {
+  position: absolute;
+  right: 17px;
+  top: 239px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.card {
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+/* .card:hover{
+    background-color: rgb(105, 103, 103) ;
+    cursor: pointer;
+} */
+
+/* for this circle waala playbutton harry ne variable banaya hain --a karke and card pe hove karne pe uss variable ki value ko 1 kar diya hain, initially usko 0 se start kiya hain.. */
+/* .card:hover .play {
+    top: 150px;
+    opacity: 1;
+} */
+
+.buttons > * {
+  margin: 0 12px;
+}
+
+/* ye maine lagaya hain flex box buttons pe */
+.buttons {
+  display: flex;
+}
+
+.signupbtn,
+.loginbtn {
+  border: 1px solid var(--text-secondary);
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signupbtn {
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+
+.signupbtn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.loginbtn {
+  background-color: var(--primary-accent);
+  color: var(--text-primary);
+  border-color: var(--primary-accent);
+}
+
+.loginbtn:hover {
+  filter: brightness(1.15);
+}
+
+.playbar {
+  position: absolute;
+  left: 15px;
+  bottom: 2px;
+  /* filter: invert(1); */
+  border-radius: 10px;
+  padding: 12px;
+  width: 70vw;
+  min-height: 40px;
+}
+
+.songbuttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.songlist {
+  height: 544px;
+  overflow: auto;
+  margin-bottom: 44px;
+}
+
+.songlist ul {
+  padding: 0 12px;
+}
+
+.songlist ul li {
+  list-style-type: decimal;
+  display: flex;
+
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+  border-radius: 5px;
+  justify-content: space-between;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.songlist ul li:hover {
+  background-color: rgb(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.songlist .info {
+  font-size: 13px;
+  width: 344px;
+}
+
+.info div {
+  word-break: break-all;
+}
+
+.playnow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playnow span {
+  font-size: 15px;
+  width: 64px;
+  padding: 12px;
+}
+
+.seekbar {
+  height: 6px;
+  width: 98%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  position: absolute;
+  bottom: 0;
+  margin: 6px;
+  cursor: pointer;
+}
+
+.circle {
+  width: 13px;
+  height: 13px;
+  border-radius: 13px;
+  background-color: var(--primary-accent);
+  position: relative;
+  bottom: 4px;
+  left: 0%;
+  transition: left 0.5s;
+}
+
+.songinfo {
+  color: var(--text-secondary);
+  padding: 0 12px;
+  width: 250px;
+}
+
+.songtime {
+  color: var(--text-secondary);
+  width: 84px;
+  padding: 0 12px;
+}
+
+.volume {
+  /* shuruwaati 2 cheeze maine likhii hain just to make sure ki volume and time match ho raho indentation mein vertically */
+  position: relative;
+  bottom: -2px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  cursor: pointer;
+}
+
+.range input {
+  cursor: pointer;
+  height: 28px;
+}
+
+.abovebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.timeandvolume {
+  display: flex;
+  justify-content: normal;
+  align-items: center;
+  gap: 19px;
+}
+
+.songbuttons img,
+.volume img {
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.songbuttons img:hover,
+.volume img:hover {
+  opacity: 1;
+}
+
+/* This is for our volume slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.2);
+  height: 4px;
+  border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;
+  background-color: var(--primary-accent);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+}
+
+.spaceadjustment {
+  display: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- Login/Signup Form Styles --- */
+
+/* 1. The Inputs (Dark Gray Pills) */
+.auth-input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Semi-transparent white */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  /* Smooth rounded corners */
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-accent);
+  /* Glows purple on click */
+}
+
+/* 2. The Purple Button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-accent);
+  /* Your main purple color */
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  /* Fully rounded pill shape */
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  transform: scale(1.02);
+  /* Slight zoom effect */
+  filter: brightness(1.1);
+  /* Gets brighter */
+}
+
+/* 3. The Close 'X' Button */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
+/* 4. Links (Sign up / Log in text) */
+.auth-link {
+  color: var(--primary-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* !important is used to make sure that our css is being used, because the toastify has a strong css and to use ours we have to write this  */
+/* The Glass Container for the Toast */
+.glass-toast {
+  background: rgba(0, 0, 0, 0.6) !important;
+  /* Dark semi-transparent */
+  backdrop-filter: blur(10px) !important;
+  /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  /* Subtle border */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+  border-radius: 15px !important;
+  color: #ffffff !important;
+  /* White text */
+  font-family: inherit !important;
+  /* Matches your app font */
+}
+
+/* Customizing the Progress Bar to look glowing */
+.Toastify__progress-bar {
+  height: 4px !important;
+  background: linear-gradient(to right, #1db954, #1ed760) !important;
+}
+
+/* Specific Progress Bar Colors for specific types */
+.Toastify__progress-bar--error {
+  background: linear-gradient(to right, #ff4b2b, #ff416c) !important;
+  /* Red Gradient */
+}
+
+.Toastify__progress-bar--success {
+  background: linear-gradient(to right, #1db954, #1ed760) !important;
+  /* Green Gradient */
+}
+
+.Toastify__progress-bar--warning {
+  background: linear-gradient(to right, #f7971e, #ffd200) !important;
+  /* Yellow Gradient */
+}
+
+/* Customize the Close Button (the little 'x') */
+.Toastify__close-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.logincontainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* to set up the background image */
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(https://res.cloudinary.com/dqkknf9vy/image/upload/v1765542729/loginpageimage_u6bgsy.png);
+  /* covering my whole container without either leaving empty space or overstretching the image */
+  background-size: cover;
+  /* we are starting the bg image from the center */
+  background-position: center;
+  /* the image will not be repeated if their is even empty space also */
+  background-repeat: no-repeat;
+}
+
+.signupcontainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* to set up the background image */
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(https://res.cloudinary.com/dqkknf9vy/image/upload/v1765542729/loginpageimage_u6bgsy.png);
+  /* covering my whole container without either leaving empty space or overstretching the image */
+  background-size: cover;
+  /* we are starting the bg image from the center */
+  background-position: center;
+  /* the image will not be repeated if their is even empty space also */
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 1200px) {
+  .left {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    width: 75%;
+    max-width: 300px;
+    transition: all 0.3s ease;
+    z-index: 100;
+    background: #111;
+  }
+
+  .left.sidebaropen {
+    left: 0%;
+  }
+
+  .close {
+    display: block;
+    position: absolute;
+    right: 31px;
+    top: 25px;
+    width: 29px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .timeandvolume {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 27px;
+  }
+
+  .right {
+    width: 100%;
+    margin: 0;
+    padding: 0 16px;
+  }
+
+  .playbar {
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .seekbar {
+    width: calc(100vw - 101px);
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .songinfo,
+  .songtime {
+    width: auto;
+  }
+
+  .card {
+    flex: 1 1 400px;
+  }
+
+  .cardcontainer {
+    margin: 0px;
+    justify-content: center;
+    max-height: 69vh;
+  }
+
+  .close {
+    display: block;
+  }
+
+  .abovebar {
+    flex-direction: column;
+    gap: 23px;
+    align-items: center;
+  }
+
+  .MusicPlaylists h1 {
+    padding: 12px 2px;
+  }
+
+  .spaceadjustment {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .card {
+    flex: 1 1 400px;
+  }
+
+  .MusicPlaylists h1 {
+    padding: 12px 2px;
+  }
+
+  .spaceadjustment {
+    display: none;
+  }
+
+  .logincontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 19% center !important;
+  }
+
+  .signupcontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 19% center !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .signupbtn .loginbtn {
+    padding: 6px 16px;
+  }
+
+  .spaceadjustment {
+    display: block;
+  }
+
+  .cardcontainer {
+    box-sizing: border-box;
+  }
+
+  .card {
+    flex: 1 1 150px;
+  }
+
+  .logincontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 24% center;
+  }
+
+  .signupcontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 19% center !important;
+  }
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+/* The Classes that are made to better the UI */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.interactive-card {
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.album-card {
+  width: 120px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.album-card img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.album-card p {
+  margin-top: 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.album-card:hover {
+  transform: scale(1.05);
+}
+
+.play-overlay {
+  position: absolute;
+  top: 40%;
+  left: 40%;
+  background: #1db954;
+  border-radius: 50%;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.album-card:hover .play-overlay {
+  opacity: 1;
+}
+
+/* --- Login/Signup Form Styles --- */
+
+/* 1. The Inputs (Dark Gray Pills) */
+.auth-input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Semi-transparent white */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  /* Smooth rounded corners */
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-accent);
+  /* Glows purple on click */
+}
+
+/* 2. The Purple Button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-accent);
+  /* Your main purple color */
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  /* Fully rounded pill shape */
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  transform: scale(1.02);
+  /* Slight zoom effect */
+  filter: brightness(1.1);
+  /* Gets brighter */
+}
+
+/* 3. The Close 'X' Button */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
+/* 4. Links (Sign up / Log in text) */
+.auth-link {
+  color: var(--primary-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.interactive-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px 5px var(--shadow-color);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.close {
+  display: none;
+}
+
+.left {
+  width: 25vw;
+  padding: 10px;
+}
+
+.right {
+  width: 75vw;
+}
+
+.home ul li {
+  display: flex;
+  width: 14px;
+  gap: 15px;
+  list-style-type: none;
+  padding-top: 14px;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 23px 14px;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.heading img {
+  width: 17px;
+}
+
+.library {
+  min-height: 80vh;
+  position: relative;
+}
+
+.footer {
+  display: flex;
+  font-size: 10px;
+  gap: 12px;
+  position: absolute;
+  bottom: 1px;
+  padding: 10px 0;
+}
+
+.footer a {
+  color: gray;
+}
+
+.right {
+  margin: 16px 0;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header > * {
+  padding: 20px;
+}
+
+.MusicPlaylists {
+  padding: 16px;
+}
+
+.MusicPlaylists h1 {
+  padding: 16px;
+}
+
+.hamburger {
+  display: none;
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.cardcontainer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  margin: 30px;
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.hamburgercontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.card img {
+  width: 100%;
+  object-fit: cover;
+  height: 200px;
+}
+
+.logo img {
+  width: 145px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.play {
+  position: absolute;
+  right: 17px;
+  top: 239px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.card {
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  position: relative;
+}
+
+/* .card:hover{
+    background-color: rgb(105, 103, 103) ;
+    cursor: pointer;
+} */
+
+/* for this circle waala playbutton harry ne variable banaya hain --a karke and card pe hove karne pe uss variable ki value ko 1 kar diya hain, initially usko 0 se start kiya hain.. */
+/* .card:hover .play {
+    top: 150px;
+    opacity: 1;
+} */
+
+.buttons > * {
+  margin: 0 12px;
+}
+
+/* ye maine lagaya hain flex box buttons pe */
+.buttons {
+  display: flex;
+}
+
+.signupbtn,
+.loginbtn {
+  border: 1px solid var(--text-secondary);
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.signupbtn {
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+
+.signupbtn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.loginbtn {
+  background-color: var(--primary-accent);
+  color: var(--text-primary);
+  border-color: var(--primary-accent);
+}
+
+.loginbtn:hover {
+  filter: brightness(1.15);
+}
+
+.playbar {
+  position: absolute;
+  left: 15px;
+  bottom: 2px;
+  /* filter: invert(1); */
+  border-radius: 10px;
+  padding: 12px;
+  width: 70vw;
+  min-height: 40px;
+}
+
+.songbuttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.songlist {
+  height: 544px;
+  overflow: auto;
+  margin-bottom: 44px;
+}
+
+.songlist ul {
+  padding: 0 12px;
+}
+
+.songlist ul li {
+  list-style-type: decimal;
+  display: flex;
+
+  gap: 12px;
+  cursor: pointer;
+  padding: 12px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 12px 0;
+  border-radius: 5px;
+  justify-content: space-between;
+
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.songlist ul li:hover {
+  background-color: rgb(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.songlist .info {
+  font-size: 13px;
+  width: 344px;
+}
+
+.info div {
+  word-break: break-all;
+}
+
+.playnow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.playnow span {
+  font-size: 15px;
+  width: 64px;
+  padding: 12px;
+}
+
+.seekbar {
+  height: 6px;
+  width: 98%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  position: absolute;
+  bottom: 0;
+  margin: 6px;
+  cursor: pointer;
+}
+
+.circle {
+  width: 13px;
+  height: 13px;
+  border-radius: 13px;
+  background-color: var(--primary-accent);
+  position: relative;
+  bottom: 4px;
+  left: 0%;
+  transition: left 0.5s;
+}
+
+.songinfo {
+  color: var(--text-secondary);
+  padding: 0 12px;
+  width: 250px;
+}
+
+.songtime {
+  color: var(--text-secondary);
+  width: 84px;
+  padding: 0 12px;
+}
+
+.volume {
+  /* shuruwaati 2 cheeze maine likhii hain just to make sure ki volume and time match ho raho indentation mein vertically */
+  position: relative;
+  bottom: -2px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  cursor: pointer;
+}
+
+.range input {
+  cursor: pointer;
+  height: 28px;
+}
+
+.abovebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+  width: 100%;
+}
+
+.timeandvolume {
+  display: flex;
+  justify-content: normal;
+  align-items: center;
+  gap: 19px;
+}
+
+.songbuttons img,
+.volume img {
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.songbuttons img:hover,
+.volume img:hover {
+  opacity: 1;
+}
+
+/* This is for our volume slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: rgba(255, 255, 255, 0.2);
+  height: 4px;
+  border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;
+  background-color: var(--primary-accent);
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+}
+
+.spaceadjustment {
+  display: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* --- Login/Signup Form Styles --- */
+
+/* 1. The Inputs (Dark Gray Pills) */
+.auth-input {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Semi-transparent white */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  /* Smooth rounded corners */
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary-accent);
+  /* Glows purple on click */
+}
+
+/* 2. The Purple Button */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--primary-accent);
+  /* Your main purple color */
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  /* Fully rounded pill shape */
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    filter 0.2s ease;
+  margin-top: 10px;
+}
+
+.auth-btn:hover {
+  transform: scale(1.02);
+  /* Slight zoom effect */
+  filter: brightness(1.1);
+  /* Gets brighter */
+}
+
+/* 3. The Close 'X' Button */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #a0aec0;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: white;
+}
+
+/* 4. Links (Sign up / Log in text) */
+.auth-link {
+  color: var(--primary-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+/* !important is used to make sure that our css is being used, because the toastify has a strong css and to use ours we have to write this  */
+/* The Glass Container for the Toast */
+.glass-toast {
+  background: rgba(0, 0, 0, 0.6) !important;
+  /* Dark semi-transparent */
+  backdrop-filter: blur(10px) !important;
+  /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  /* Subtle border */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+  border-radius: 15px !important;
+  color: #ffffff !important;
+  /* White text */
+  font-family: inherit !important;
+  /* Matches your app font */
+}
+
+/* Customizing the Progress Bar to look glowing */
+.Toastify__progress-bar {
+  height: 4px !important;
+  background: linear-gradient(to right, #1db954, #1ed760) !important;
+}
+
+/* Specific Progress Bar Colors for specific types */
+.Toastify__progress-bar--error {
+  background: linear-gradient(to right, #ff4b2b, #ff416c) !important;
+  /* Red Gradient */
+}
+
+.Toastify__progress-bar--success {
+  background: linear-gradient(to right, #1db954, #1ed760) !important;
+  /* Green Gradient */
+}
+
+.Toastify__progress-bar--warning {
+  background: linear-gradient(to right, #f7971e, #ffd200) !important;
+  /* Yellow Gradient */
+}
+
+/* Customize the Close Button (the little 'x') */
+.Toastify__close-button {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.logincontainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  /* to set up the background image */
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(https://res.cloudinary.com/dqkknf9vy/image/upload/v1765542729/loginpageimage_u6bgsy.png);
+  /* covering my whole container without either leaving empty space or overstretching the image */
+  background-size: cover;
+  /* we are starting the bg image from the center */
+  background-position: center;
+  /* the image will not be repeated if their is even empty space also */
+  background-repeat: no-repeat;
+}
+
+.signupcontainer {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* to set up the background image */
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url(https://res.cloudinary.com/dqkknf9vy/image/upload/v1765542729/loginpageimage_u6bgsy.png);
+  /* covering my whole container without either leaving empty space or overstretching the image */
+  background-size: cover;
+  /* we are starting the bg image from the center */
+  background-position: center;
+  /* the image will not be repeated if their is even empty space also */
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 1200px) {
+  .left {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    width: 75%;
+    max-width: 300px;
+    transition: all 0.3s ease;
+    z-index: 100;
+    background: #111;
+  }
+
+  .left.sidebaropen {
+    left: 0%;
+  }
+
+  .close {
+    display: block;
+    position: absolute;
+    right: 31px;
+    top: 25px;
+    width: 29px;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .timeandvolume {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 27px;
+  }
+
+  .right {
+    width: 100%;
+    margin: 0;
+    padding: 0 16px;
+  }
+
+  .playbar {
+    width: 95%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .seekbar {
+    width: calc(100vw - 101px);
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .songinfo,
+  .songtime {
+    width: auto;
+  }
+
+  .card {
+    flex: 1 1 400px;
+  }
+
+  .cardcontainer {
+    margin: 0px;
+    justify-content: center;
+    max-height: 69vh;
+  }
+
+  .close {
+    display: block;
+  }
+
+  .abovebar {
+    flex-direction: column;
+    gap: 23px;
+    align-items: center;
+  }
+
+  .MusicPlaylists h1 {
+    padding: 12px 2px;
+  }
+
+  .spaceadjustment {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .card {
+    flex: 1 1 400px;
+  }
+
+  .MusicPlaylists h1 {
+    padding: 12px 2px;
+  }
+
+  .spaceadjustment {
+    display: none;
+  }
+
+  .logincontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 19% center !important;
+  }
+
+  .signupcontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 19% center !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .signupbtn .loginbtn {
+    padding: 6px 16px;
+  }
+
+  .spaceadjustment {
+    display: block;
+  }
+
+  .cardcontainer {
+    box-sizing: border-box;
+  }
+
+  .card {
+    flex: 1 1 150px;
+  }
+
+  .logincontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 24% center;
+  }
+
+  .signupcontainer {
+    position: fixed;
+    background-size: cover;
+    background-position: 19% center !important;
+  }
+
+  .room-layout {
+    display: flex;
+    gap: 10px;
+  }
+
+  @media (max-width: 1100px) {
+    .room-layout {
+      flex-direction: column;
+    }
+
+    .right {
+      width: 100% !important;
+      order: 1;
+    }
+
+    .left:first-child {
+      width: 100% !important;
+      order: 2;
+    }
+
+    .left:last-child {
+      width: 100% !important;
+      order: 3;
+    }
+  }
+}
+/* TOP BAR */
+
+.room-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 18px 28px;
+
+  margin-bottom: 16px;
+
+  border-radius: 18px;
+
+  background: rgba(20, 20, 35, 0.95);
+
+  border: 1px solid rgba(140, 82, 255, 0.25);
+
+  box-shadow:
+    0 0 25px rgba(140, 82, 255, 0.15),
+    0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.topbar-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  min-width: 180px;
+}
+
+.topbar-icon {
+  width: 54px;
+  height: 54px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  font-size: 24px;
+
+  background: rgba(140, 82, 255, 0.12);
+
+  border: 1px solid rgba(140, 82, 255, 0.25);
+}
+
+.topbar-label {
+  font-size: 13px;
+  color: #9ca3af;
+
+  margin-bottom: 4px;
+}
+
+.topbar-value {
+  font-size: 18px;
+  font-weight: 600;
+
+  color: white;
+}
+
+.copy-btn {
+  margin-left: 16px;
+
+  background: rgba(140, 82, 255, 0.12);
+
+  color: #b388ff;
+
+  border: 1px solid rgba(140, 82, 255, 0.35);
+
+  border-radius: 12px;
+
+  padding: 10px 18px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.copy-btn:hover {
+  background: rgba(140, 82, 255, 0.22);
+}
+
+.leave-room-btn {
+  background: linear-gradient(
+    135deg,
+    #ff5f5f,
+    #ff3b3b
+  );
+
+  border: none;
+
+  color: white;
+
+  font-weight: 700;
+
+  padding: 14px 24px;
+
+  border-radius: 14px;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.leave-room-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+}
