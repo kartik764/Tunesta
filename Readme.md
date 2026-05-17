@@ -17,7 +17,7 @@ https://tunesta.vercel.app
 
 ### ⚙️ Backend
 
-(Your Railway Backend URL)
+https://tunesta-production.up.railway.app
 
 ---
 
@@ -220,7 +220,7 @@ Tunesta/
 ## Frontend (.env)
 
 ```env
-VITE_API_URL=YOUR_BACKEND_URL
+VITE_API_URL=https://tunesta-production.up.railway.app
 ```
 
 ---
