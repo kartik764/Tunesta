@@ -43,7 +43,7 @@ app.use("/songs", express.static("songs")); //serve static files here
 
 //1. Testing Route
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Tunesta Backend Running!");
 });
 
 //2. API for register/signup for new user
