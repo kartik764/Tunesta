@@ -1,123 +1,147 @@
-import React, { useState } from 'react'
-import "../components/Style.css"
-import "../components/Utility.css"
-import { toast } from 'react-toastify';
-
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuth,Authprovider } from '../context/Authcontext'
-
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, LogIn } from "lucide-react";
+import { toast } from "react-toastify";
+import { useAuth } from "../context/Authcontext";
+import AuthLayout from "../components/auth/AuthLayout";
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
- 
-    // to use the login function declared in the authcontext.
-    const {login} = useAuth();
-    // to use the navigate function of the react-router-dom.    
-    const navigate= useNavigate();
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-    const handlelogin = async (e) => {
-        // to prevent the default action of the form to refresh the server upon submission.
-        e.preventDefault();
-        
-        if(!email || !password){
-            toast.warning("Please enter both email and the password");
-        }
+  const handlelogin = async (e) => {
+    e.preventDefault();
 
-        const loadingToast=toast.loading("Logging in...");
-
-        try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({email,password}), // Convert your data to a JSON string
-                
-            });
-
-            const data= await response.json();
-            toast.dismiss(loadingToast);
-
-            if(response.ok){
-                // 1. Updating the login status at the Authcontext to make the app know that the user is login.
-                console.log("LOGIN SUCCESS");
-                toast.success("Welcome To TUNESTA! 🎵")
-                login(data.user, data.token);
-                sessionStorage.setItem("tunesta_usertoken", data.token);
-                sessionStorage.setItem("user_email", email);
-                console.log("Stored Email:", email);
-                // route change to home page
-                navigate("/");
-
-            }
-            else{
-                toast.error("Check your Credentials and try again...")
-                console.log("Login failed because of the message: ", data.message);
-            }
-
-        }
-        catch(e) {
-            toast.dismiss(loadingToast);
-            toast.error("Something went wrong, please try again later...")
-            console.log("login failed with the error: ",e);
-        }
+    if (!email || !password) {
+      toast.warning("Please enter both email and password.");
+      return;
     }
 
-    return (
-        <>
-            <div className="logincontainer">
+    const loadingToast = toast.loading("Logging in...");
 
-                <div className="glass-effect" style={{
-                    width: '450px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '20px',
-                    padding: '40px',
-                    boxShadow: '0 0 40px rgba(0,0,0,0.5)'
-                }}>
-                    {/* cross button */}
-                    <button className='close-btn'></button>
-                    <h1 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '10px', fontSize: '32px' }}>Login</h1>
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
 
-                    <form onSubmit={handlelogin} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        {/* inputting the email */}
-                        <div className="input-group">
-                            <input
-                                type='email'
-                                // placeholder gives the hint to the user that what is the field is about.
-                                placeholder='Email Address'
-                                className='auth-input'
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            >
-                            </input>
-                        </div>
+      const data = await response.json();
 
-                        <div className="input-group">
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                className="auth-input"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
+      toast.dismiss(loadingToast);
 
-                        <button type="submit" className="auth-btn">
-                            Log In
-                        </button>
-                    </form>
+      if (response.ok) {
+        toast.success("Welcome to Tunesta! 🎵");
 
-                    <p style={{ textAlign: 'center', color: '#a0aec0', fontSize: '14px', marginTop: '10px' }}>
-                        Don't have an account?
-                        <Link to="/signup" className="auth-link">Sign Up</Link>
-                    </p>
-                </div>
-            </div>
-        </>
-    )
-}
+        login(data.user, data.token);
+
+        sessionStorage.setItem(
+          "tunesta_usertoken",
+          data.token
+        );
+
+        sessionStorage.setItem(
+          "user_email",
+          email
+        );
+
+        navigate("/");
+      } else {
+        toast.error(
+          "Check your credentials and try again."
+        );
+      }
+    } catch (e) {
+      toast.dismiss(loadingToast);
+
+      toast.error(
+        "Something went wrong. Please try again later."
+      );
+
+      console.log(e);
+    }
+  };
+
+  return (
+    <AuthLayout
+      title="Welcome Back"
+      subtitle="Sign in to continue listening together."
+    >
+      <form
+        onSubmit={handlelogin}
+        className="space-y-5"
+      >
+        <div>
+          <label className="mb-2 flex items-center gap-2 text-sm text-zinc-300">
+            <Mail
+              size={16}
+              className="text-violet-400"
+            />
+            Email Address
+          </label>
+
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-zinc-500 focus:border-violet-500"
+          />
+        </div>
+
+        <div>
+          <label className="mb-2 flex items-center gap-2 text-sm text-zinc-300">
+            <Lock
+              size={16}
+              className="text-violet-400"
+            />
+            Password
+          </label>
+
+          <input
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) =>
+              setPassword(e.target.value)
+            }
+            className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-white outline-none transition placeholder:text-zinc-500 focus:border-violet-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-violet-600 py-3 font-semibold text-white transition hover:bg-violet-500"
+        >
+          <LogIn size={18} />
+          Log In
+        </button>
+
+        <p className="pt-2 text-center text-sm text-zinc-400">
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            className="font-semibold text-violet-400 transition hover:text-violet-300"
+          >
+            Sign Up
+          </Link>
+        </p>
+      </form>
+    </AuthLayout>
+  );
+};
 
 export default Login;

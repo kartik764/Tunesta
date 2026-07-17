@@ -1,23 +1,51 @@
-import Maincontent from "../components/Maincontent";
-import { useNavigate } from "react-router-dom";
-import Playbar from "../components/Playbar";
-import Sidebar from "../components/Sidebar";
-import FileModal from "../components/FileModal";
-import CursorGlow from "../components/Mousemove";
+import React, { useState } from "react";
+
+import Sidebar from "../components/home/Sidebar";
+import Maincontent from "../components/home/Maincontent";
+import Playbar from "../components/home/Playbar";
+import FileModal from "../components/home/FileModal";
+import CursorGlow from "../components/home/CursorGlow";
+import Topbar from "../components/home/Topbar";
+
 import usePlayerState from "../hooks/usePlayerState";
-import React, { useState, useEffect } from "react";
+import useAlbums from "../hooks/useAlbums";
+import useAudioUnlock from "../hooks/useAudioUnlock";
+import useAudioPlayer from "../hooks/useAudioPlayer";
+import useSearch from "../hooks/useSearch";
+import useRoom from "../hooks/useRoom";
+import useAlbumPlayer from "../hooks/useAlbumPlayer";
 
 const Home = () => {
-  const navigate = useNavigate();
+  /* =========================
+     UI
+  ========================= */
 
-  // =========================
-  // 🔹 BASIC STATES
-  // =========================
-  const [query, setQuery] = useState("");
-  const [albums, setAlbums] = useState([]);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isSearchMode, setIsSearchMode] = useState(false);
 
-  const [roomInput, setRoomInput] = useState("");
+  /* =========================
+     Albums
+  ========================= */
+
+  const { albums, fetchAlbums } = useAlbums();
+
+  const { query, setQuery, filteredAlbums } = useSearch(albums);
+
+  /* =========================
+     Rooms
+  ========================= */
+
+  const {
+    roomInput,
+    setRoomInput,
+    handleCreateRoom,
+    handleJoinRoom,
+  } = useRoom();
+
+  /* =========================
+     Player State
+  ========================= */
 
   const {
     songs,
@@ -54,151 +82,36 @@ const Home = () => {
     muteplaytoggle,
   } = usePlayerState();
 
-  // =========================
-  // 🔹 UI STATES
-  // =========================
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  /* =========================
+     Custom Hooks
+  ========================= */
 
-  // =========================
-  // 🔹 FILTER ALBUMS
-  // =========================
-  const filteredAlbums = (albums || []).filter((album) => {
-    const searchText = query.toLowerCase();
-    return (
-      album.title.toLowerCase().includes(searchText) ||
-      album.songs.some((song) => song.name.toLowerCase().includes(searchText))
-    );
+  useAudioUnlock(audioref);
+
+  useAudioPlayer({
+    audioref,
+    currentsong,
+    isplaying,
+    volume,
   });
 
-  // =========================
-  // 🔹 FETCH ALBUMS
-  // =========================
-  const fetchalbums = async () => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/albums`, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("tunesta_usertoken")}`,
-        },
-      });
+  const { handleAlbumClick, handleSongClick } = useAlbumPlayer({
+    setSongs,
+    setCurrentSong,
+    setCurrentIndex,
+    setIsPlaying,
+  });
 
-      if (!res.ok) {
-        console.log("❌ Album fetch failed:", res.status);
-        return;
-      }
+  /* =========================
+     UI
+  ========================= */
 
-      const data = await res.json();
-      setAlbums(data);
-    } catch (err) {
-      console.log("🚨 Backend not reachable yet...");
-    }
-  };
-
-  useEffect(() => {
-    fetchalbums();
-  }, []);
-
-  useEffect(() => {
-    const unlockAudio = () => {
-      if (!audioref.current) return;
-
-      audioref.current.muted = true;
-
-      audioref.current
-        .play()
-        .then(() => {
-          audioref.current.pause();
-          audioref.current.currentTime = 0;
-          audioref.current.muted = false;
-
-          console.log("🔓 Audio unlocked");
-        })
-        .catch(() => {});
-
-      window.removeEventListener("click", unlockAudio);
-    };
-
-    window.addEventListener("click", unlockAudio);
-
-    return () => window.removeEventListener("click", unlockAudio);
-  }, []);
-
-  // =========================
-  // 🔹 APPLY VOL TO AUDIO
-  // =========================
-  useEffect(() => {
-    if (audioref.current) {
-      audioref.current.volume = volume;
-    }
-  }, [volume]);
-
-  // LOCAL PLAYER
-  useEffect(() => {
-    if (!audioref.current || !currentsong) return;
-
-    const src = currentsong.path.startsWith("http")
-      ? currentsong.path
-      : `${import.meta.env.VITE_API_URL}${currentsong.path}`;
-
-    if (audioref.current.src !== src) {
-      audioref.current.src = src;
-    }
-
-    if (isplaying) {
-      audioref.current.play().catch(() => {});
-    } else {
-      audioref.current.pause();
-    }
-  }, [isplaying, currentsong]);
-
-  // =========================
-  // 🔹 ROOM ACTIONS
-  // =========================
-  const handleCreateRoom = () => {
-    const roomCode = Math.random().toString(36).substring(2, 8);
-
-    navigate(`/room/${roomCode}`);
-    sessionStorage.setItem("activeRoom", roomCode);
-    setRoomInput("");
-  };
-
-  const handleJoinRoom = () => {
-    if (!roomInput) return alert("Enter room ID");
-
-    navigate(`/room/${roomInput}`);
-    sessionStorage.setItem("activeRoom", roomInput);
-    setRoomInput("");
-  };
-
-  // =========================
-  // 🔹 SONG HANDLERS
-  // =========================
-  const handleAlbumClick = (album) => {
-    if (!album.songs.length) return;
-
-    const song = album.songs[0];
-
-    setSongs(album.songs);
-    setCurrentSong(song);
-    setIsPlaying(true);
-    setCurrentIndex(0);
-  };
-
-  const handlesongclick = (song, index) => {
-    setCurrentSong(song);
-    setIsPlaying(true);
-    setCurrentIndex(index);
-  };
-
-  // =========================
-  // 🔹 UI
-  // =========================
   return (
     <>
       <FileModal
         isUploadOpen={isUploadOpen}
         handleCloseUpload={() => setIsUploadOpen(false)}
-        fetchalbums={fetchalbums}
+        fetchalbums={fetchAlbums}
       />
 
       <CursorGlow />
@@ -207,7 +120,7 @@ const Home = () => {
         <div className={`left ${isMenuOpen ? "sidebaropen" : ""}`}>
           <Sidebar
             songs={songs}
-            handlesongclick={handlesongclick}
+            handlesongclick={handleSongClick}
             handleclosebutton={() => setIsMenuOpen(false)}
             handleOpenUpload={() => setIsUploadOpen(true)}
             setIsSearchMode={setIsSearchMode}
@@ -220,14 +133,17 @@ const Home = () => {
         </div>
 
         <div className="right">
+          <Topbar
+            handlehamburgerclick={() => setIsMenuOpen(true)}
+            currentsong={currentsong}
+          />
+
           <Maincontent
             albums={filteredAlbums}
             handleAlbumClick={handleAlbumClick}
-            handlehamburgerclick={() => setIsMenuOpen(true)}
             query={query}
             setQuery={setQuery}
             isSearchMode={isSearchMode}
-            currentsong={currentsong}
           />
 
           <div className="playbar">
@@ -254,6 +170,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+
       <audio ref={audioref} />
     </>
   );

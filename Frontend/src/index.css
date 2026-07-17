@@ -1,20 +1,57 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+@import "tailwindcss";
+
+/* -----------------------------
+   Global Theme
+------------------------------ */
+
 :root {
-  --background-dark: #0D0C1D; /* A very deep, dark purple-blue */
-  --glass-bg: rgba(255, 255, 255, 0.05); /* The semi-transparent background for our components */
-  --primary-accent: #9F7AEA; /* A soothing, muted purple for highlights */
-  --text-primary: #E2E8F0; /* Off-white, easier on the eyes than pure white */
-  --text-secondary: #A0AEC0; /* A light grey for less important text */
-  --shadow-color: rgba(159, 122, 234, 0.25); /* A shadow color derived from our accent */
+  --background: #09090b;
+  --card: #171720;
+  --card-hover: #1e1e2b;
+
+  --primary: #8b5cf6;
+  --primary-light: #a78bfa;
+  --primary-dark: #6d28d9;
+
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+/* -----------------------------
+   Base Styles
+------------------------------ */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-    background-color: var(--background-dark);
-    color: var(--text-primary);
-    font-family: "Roboto", sans-serif;
+  font-family: "Inter", sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
+  overflow-x: hidden;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* -----------------------------
+   Scrollbar
+------------------------------ */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111118;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8b5cf6;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
 }

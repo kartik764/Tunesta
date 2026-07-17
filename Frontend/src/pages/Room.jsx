@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Playbar from "../components/Playbar";
+import Playbar from "../components/home/Playbar";
 import usePlayerState from "../hooks/usePlayerState";
 import { toast } from "react-toastify";
 import { socket } from "../socket";

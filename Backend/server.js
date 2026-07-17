@@ -68,7 +68,9 @@ app.post("/auth/register", async (req, res) => {
       message: "User created successfully",
       userID: newuser._id,
     });
+
   } catch (error) {
+    
     // Handle duplicate email error (MongoDB error code 11000)
     if (error.code == 11000) {
       return res.status(409).json({
