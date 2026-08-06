@@ -4,9 +4,10 @@ const socketHandler = (io) => {
   io.on("connection", (socket) => {
     console.log("User Connected : ", socket.id);
 
+    // =========================
+    // ROOM
+    // =========================
     socket.on("join_room", ({ roomId, username }) => {
-      console.log("JOIN_ROOM:", roomId, username);
-
       socket.join(roomId);
 
       if (!rooms[roomId]) {
@@ -45,12 +46,6 @@ const socketHandler = (io) => {
 
       io.to(roomId).emit("room_users", room.users);
       io.to(roomId).emit("host_info", room.host);
-
-      console.log("JOIN:", {
-        roomId,
-        host: room.host,
-        users: room.users,
-      });
 
       let currentTime = room.time;
 
@@ -131,12 +126,13 @@ const socketHandler = (io) => {
 
           io.to(roomId).emit("room_users", rooms[roomId].users);
           io.to(roomId).emit("host_info", rooms[roomId].host);
-
-          console.log("UPDATED ROOM:", roomId, rooms[roomId].host);
         }, 3000);
       }
     });
 
+    // =========================
+    // PLAYBACK
+    // =========================
     socket.on("play", ({ roomId, song, time }) => {
       if (!rooms[roomId]) return;
 
@@ -168,11 +164,6 @@ const socketHandler = (io) => {
       room.isPlaying = false;
 
       io.to(roomId).emit("pause", { time });
-
-      console.log("PAUSE:", {
-        roomId,
-        time,
-      });
     });
 
     socket.on("seek", ({ roomId, time }) => {
@@ -201,6 +192,9 @@ const socketHandler = (io) => {
       io.to(roomId).emit("volume_change", volume);
     });
 
+    // =========================
+    // QUEUE
+    // =========================
     socket.on("add_to_queue", ({ roomId, song }) => {
       if (!rooms[roomId]) return;
 
@@ -212,12 +206,7 @@ const socketHandler = (io) => {
         return;
       }
 
-      console.log("Clicked Song:", song);
-      console.log("Queue:", room.queue);
-
-      room.queue.forEach((queuedSong) => {
-        console.log("Queue _id:", queuedSong._id, "Clicked _id:", song._id);
-      });
+      room.queue.forEach((queuedSong) => {});
 
       // Song already in queue
       const alreadyQueued = room.queue.some(
@@ -232,11 +221,6 @@ const socketHandler = (io) => {
       room.queue.push(song);
 
       io.to(roomId).emit("queue_updated", room.queue);
-
-      console.log(
-        "QUEUE:",
-        room.queue.map((s) => s.name),
-      );
     });
 
     socket.on("remove_from_queue", ({ roomId, index }) => {
@@ -288,8 +272,6 @@ const socketHandler = (io) => {
 
       //Everyone gets updated queue
       io.to(roomId).emit("queue_updated", room.queue);
-
-      console.log("PLAY NEXT:", nextSong.name);
     });
   });
 };
