@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 
 const usePlayerState = () => {
   // =========================
-  // 🔹 PLAYER STATES
+  // PLAYER STATES
   // =========================
 
   const [songs, setSongs] = useState([]);
@@ -14,7 +14,7 @@ const usePlayerState = () => {
   const [currentSong, setCurrentSong] = useState(null);
 
   // =========================
-  // 🔹 TIME STATES
+  // TIME STATES
   // =========================
 
   const [duration, setDuration] = useState("00:00");
@@ -26,7 +26,7 @@ const usePlayerState = () => {
   const [durationInSeconds, setdurationInSeconds] = useState(0);
 
   // =========================
-  // 🔹 AUDIO STATES
+  // AUDIO STATES
   // =========================
 
   const [volume, setVolume] = useState(1);
@@ -34,7 +34,7 @@ const usePlayerState = () => {
   const audioref = useRef(null);
 
   // =========================
-  // 🔹 PLAYER FUNCTIONS
+  // PLAYER FUNCTIONS
   // =========================
 
   const handleNextButton = () => {
@@ -75,6 +75,10 @@ const usePlayerState = () => {
       socket.emit("volume_change", newVolume);
     }
   };
+
+  // =========================
+  // RETURN
+  // =========================
 
   return {
     // SONGS
