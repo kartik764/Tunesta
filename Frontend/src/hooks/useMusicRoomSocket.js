@@ -1,13 +1,27 @@
+// ====================================================
+// IMPORTS
+// ====================================================
+
 import { useState, useEffect } from "react";
 import { socket } from "../socket/socket";
 
+// ====================================================
+// HOOK
+// ====================================================
+
 const useMusicRoomSocket = ({ roomId, username }) => {
+  // ====================================================
+  // STATE
+  // ====================================================
+
   const [users, setUsers] = useState([]);
   const [hostId, setHostId] = useState(null);
   const [isHost, setIsHost] = useState(false);
 
+  // ====================================================
+  // CONNECTION
+  // ====================================================
   useEffect(() => {
-    console.log("Join effect running");
     if (!roomId) return;
 
     const joinRoom = () => {
@@ -30,7 +44,6 @@ const useMusicRoomSocket = ({ roomId, username }) => {
 
     const handleHost = (host) => {
       setHostId(host);
-      console.log("Host received:", host);
     };
 
     socket.on("room_users", handleUsers);
@@ -43,21 +56,19 @@ const useMusicRoomSocket = ({ roomId, username }) => {
     };
   }, [roomId, username]);
 
+  // HOST
   useEffect(() => {
-    console.log("hostId:", hostId);
-    console.log("socket.id:", socket.id);
-
     if (!socket.id || !hostId) return;
-
-    console.log("Comparison:", socket.id === hostId);
 
     setIsHost(socket.id === hostId);
   }, [hostId]);
 
+  // ROOM ACTIONS
   const leaveRoom = () => {
     socket.emit("leave_room", roomId);
   };
 
+  // PLAYBACK
   const playSong = ({ song, time }) => {
     socket.emit("play", {
       roomId,
@@ -73,6 +84,9 @@ const useMusicRoomSocket = ({ roomId, username }) => {
     });
   };
 
+  // ====================================================
+  // RETURN
+  // ====================================================
   return {
     users,
     hostId,
