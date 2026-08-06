@@ -12,9 +12,11 @@ const usePlaybar = ({
   setdurationInSeconds,
   handleNextButton,
 }) => {
+  // DERIVED VALUES
   const isRoomMode = !!roomId;
   const isListener = isRoomMode && !isHost;
 
+  // HELPERS
   const formatTime = (seconds) => {
     if (isNaN(seconds) || seconds < 0) return "00:00";
 
@@ -24,6 +26,7 @@ const usePlaybar = ({
     return `${mins}:${secs}`;
   };
 
+  // AUDIO EVENTS
   useEffect(() => {
     const audio = audioref.current;
     if (!audio) return;
@@ -51,53 +54,31 @@ const usePlaybar = ({
       socket.emit("play_next", roomId);
     };
 
-    audio.addEventListener(
-      "loadedmetadata",
-      onLoadedMetadata
-    );
-
-    audio.addEventListener(
-      "timeupdate",
-      onTimeUpdate
-    );
-
-    audio.addEventListener(
-      "ended",
-      onEnded
-    );
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("ended", onEnded);
 
     return () => {
-      audio.removeEventListener(
-        "loadedmetadata",
-        onLoadedMetadata
-      );
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
 
-      audio.removeEventListener(
-        "timeupdate",
-        onTimeUpdate
-      );
+      audio.removeEventListener("timeupdate", onTimeUpdate);
 
-      audio.removeEventListener(
-        "ended",
-        onEnded
-      );
+      audio.removeEventListener("ended", onEnded);
     };
-  }, [handleNextButton]);
+  }, [audioref, roomId, isHost, handleNextButton]);
 
+  // AUDIO SETTINGS
   useEffect(() => {
     if (!audioref.current) return;
 
     audioref.current.volume = volume;
   }, [volume]);
 
+  // ACTIONS
   const handleSeek = (e) => {
     if (isListener) return;
 
-    if (
-      !audioref.current ||
-      audioref.current.duration <= 0
-    )
-      return;
+    if (!audioref.current || audioref.current.duration <= 0) return;
 
     const seekbar = e.currentTarget;
 
@@ -105,11 +86,9 @@ const usePlaybar = ({
 
     const clickPosition = e.clientX - rect.left;
 
-    const percentage =
-      clickPosition / seekbar.offsetWidth;
+    const percentage = clickPosition / seekbar.offsetWidth;
 
-    const newTime =
-      percentage * audioref.current.duration;
+    const newTime = percentage * audioref.current.duration;
 
     audioref.current.currentTime = newTime;
 
@@ -121,6 +100,7 @@ const usePlaybar = ({
     }
   };
 
+  // RETURNS
   return {
     isListener,
     handleSeek,
