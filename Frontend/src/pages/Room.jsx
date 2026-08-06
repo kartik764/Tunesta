@@ -8,14 +8,21 @@ import usePlayerState from "../hooks/usePlayerState";
 import useMusicRoomSocket from "../hooks/useMusicRoomSocket";
 
 import Playbar from "../components/home/Playbar";
-
 import RoomHeader from "../components/room/RoomHeader";
 import QueuePanel from "../components/room/QueuePanel";
 import UsersPanel from "../components/room/UsersPanel";
 import AlbumsPanel from "../components/room/AlbumsPanel";
 
+// ======================================================
+// COMPONENT
+// ======================================================
+
 const Room = () => {
-  //Hooks
+  // ====================================================
+  // HOOKS
+  // ====================================================
+
+  // Custom Hooks
   const {
     songs,
     setSongs,
@@ -51,28 +58,37 @@ const Room = () => {
     muteplaytoggle,
   } = usePlayerState();
 
-  //Routing
+  // Routing
   const { roomId } = useParams();
   const navigate = useNavigate();
 
-  //Refs
-  const prevUsersCount = useRef(0);
+  // ====================================================
+  // STATE
+  // ====================================================
 
-  //Room State
+  // Room
   const [albums, setAlbums] = useState([]);
-
-  const [currentSongName, setCurrentSongName] = useState("No Song Playing");
-
   const [queue, setQueue] = useState([]);
 
+  // Player
+  const [currentSongName, setCurrentSongName] = useState("No Song Playing");
+
+  // UI
   const [selectedAlbum, setSelectedAlbum] = useState(null);
 
-  //Repeated Logic
+  // ====================================================
+  // DERIVED VALUES
+  // ====================================================
+
   const token =
     sessionStorage.getItem("tunesta_usertoken") ||
     localStorage.getItem("tunesta_usertoken");
 
   const username = sessionStorage.getItem("user_email") || "Anonymous";
+
+  // ====================================================
+  // SOCKET HOOK
+  // ====================================================
 
   const { users, hostId, isHost, leaveRoom, playSong, pauseSong } =
     useMusicRoomSocket({
@@ -80,15 +96,11 @@ const Room = () => {
       username,
     });
 
-  const handleLeaveRoom = () => {
-    leaveRoom();
+  // =========================
+  // ROOM SETUP
+  // =========================
 
-    sessionStorage.removeItem("activeRoom");
-
-    navigate("/home");
-  };
-
-  //useEffect1 - Fetch Albums
+  // Fetch Albums
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
@@ -118,7 +130,7 @@ const Room = () => {
     fetchAlbums();
   }, []);
 
-  //useEffect2 - Refresh Recovery
+  // Refresh Recovery
   useEffect(() => {
     const savedRoom = sessionStorage.getItem("activeRoom");
 
@@ -127,7 +139,7 @@ const Room = () => {
     }
   }, []);
 
-  //useEffect 3 - Audio Unlock
+  // Audio Unlock
   useEffect(() => {
     const unlockAudio = () => {
       if (!audioref.current) return;
@@ -153,7 +165,11 @@ const Room = () => {
     };
   }, []);
 
-  //useEffect5 - Room Listeners
+  // ====================================================
+  // SOCKET LISTENERS
+  // ====================================================
+
+  // User Left
   useEffect(() => {
     const handleUserLeft = (username) => {
       if (username !== sessionStorage.getItem("user_email")) {
@@ -167,11 +183,10 @@ const Room = () => {
     };
   }, []);
 
-  //useEffect7 - Play Event  (Done)
+  // Play
   useEffect(() => {
     const handlePlay = ({ song, time, sentAt }) => {
       if (!audioref.current) {
-        console.log("Audio ref is NULL");
         return;
       }
 
@@ -189,17 +204,9 @@ const Room = () => {
 
       audioref.current.currentTime = time + latency;
 
-      audioref.current
-        .play()
-        .then(() => console.log("Audio Playing"))
-        .catch((err) => console.log("Play Error:", err));
+      audioref.current.play().then().catch(err);
 
       setIsPlaying(true);
-
-      console.log("After setState:", {
-        song,
-        isPlaying,
-      });
     };
 
     socket.on("play", handlePlay);
@@ -209,7 +216,7 @@ const Room = () => {
     };
   }, []);
 
-  //useEffect8 - Pause Event (Done)
+  // Pause
   useEffect(() => {
     const handlePause = ({ time }) => {
       if (!audioref.current) return;
@@ -229,7 +236,7 @@ const Room = () => {
     };
   }, []);
 
-  //useEffect9 - Seek Event
+  // Seek
   useEffect(() => {
     const handleSeek = ({ time }) => {
       if (!audioref.current) return;
@@ -247,7 +254,7 @@ const Room = () => {
     };
   }, []);
 
-  //useEffect10 : Volume Change
+  // Volume
   useEffect(() => {
     const handleVolume = (newVolume) => {
       if (!audioref.current) return;
@@ -263,35 +270,33 @@ const Room = () => {
     };
   }, []);
 
-  // useEffect11 - Queue Finished
-useEffect(() => {
-  const handleQueueFinished = () => {
-    if (audioref.current) {
-      audioref.current.pause();
-      audioref.current.src = "";
-      audioref.current.currentTime = 0;
-    }
+  // Queue Finished
+  useEffect(() => {
+    const handleQueueFinished = () => {
+      if (audioref.current) {
+        audioref.current.pause();
+        audioref.current.src = "";
+        audioref.current.currentTime = 0;
+      }
 
-    setCurrentSong(null);
-    setCurrentSongName("No Song Playing");
-    setIsPlaying(false);
+      setCurrentSong(null);
+      setCurrentSongName("No Song Playing");
+      setIsPlaying(false);
 
-    setCurrentTime(0);
-    setcurrentTimeInSeconds(0);
-  };
+      setCurrentTime(0);
+      setcurrentTimeInSeconds(0);
+    };
 
-  socket.on("queue_finished", handleQueueFinished);
+    socket.on("queue_finished", handleQueueFinished);
 
-  return () => {
-    socket.off("queue_finished", handleQueueFinished);
-  };
-}, []);
+    return () => {
+      socket.off("queue_finished", handleQueueFinished);
+    };
+  }, []);
 
-  // useEffect11 - Queue Updated
+  // Queue Updated
   useEffect(() => {
     const handleQueueUpdated = (updatedQueue) => {
-      console.log("QUEUE UPDATED:", updatedQueue);
-
       setQueue(updatedQueue);
     };
 
@@ -302,6 +307,7 @@ useEffect(() => {
     };
   }, []);
 
+  // Queue Error
   useEffect(() => {
     const handleQueueError = (message) => {
       toast.warning(message);
@@ -314,7 +320,7 @@ useEffect(() => {
     };
   }, []);
 
-  // useEffect - Sync State
+  // Sync State
   useEffect(() => {
     const handleSyncState = ({ song, time, isPlaying, volume, queue }) => {
       if (!audioref.current) return;
@@ -362,43 +368,32 @@ useEffect(() => {
     };
   }, []);
 
-  //FUNCTIONS
+  // ====================================================
+  // ROOM ACTIONS
+  // ====================================================
 
-  //handlealbumclick()
+  const handleLeaveRoom = () => {
+    leaveRoom();
+
+    sessionStorage.removeItem("activeRoom");
+
+    navigate("/home");
+  };
+
   const handleAlbumClick = (album) => {
     setSelectedAlbum(album);
   };
 
-  //handlealbumclick()
+  // ====================================================
+  // PLAYBACK
+  // ====================================================
+
   const handleSongClick = (song) => {
-    console.log("Song Clicked");
-    console.log("isHost:", isHost);
-
     if (!isHost) return;
-
-    console.log("Calling playSong");
 
     playSong({
       song,
       time: 0,
-    });
-  };
-
-  //playNextInQueue()
-  const playNextInQueue = () => {
-    if (!isHost) return;
-
-    socket.emit("play_next", {
-      roomId,
-    });
-  };
-
-  //handlequeuesongclick()
-  const handleQueueSongClick = (song) => {
-    console.log("ADD TO QUEUE CLICKED", song.name);
-    socket.emit("add_to_queue", {
-      roomId,
-      song,
     });
   };
 
@@ -411,8 +406,26 @@ useEffect(() => {
 
     // Room mode
     if (!isHost) return;
-
     playNextInQueue();
+  };
+
+  const playNextInQueue = () => {
+    if (!isHost) return;
+
+    socket.emit("play_next", {
+      roomId,
+    });
+  };
+
+  // ====================================================
+  // QUEUE
+  // ====================================================
+
+  const handleQueueSongClick = (song) => {
+    socket.emit("add_to_queue", {
+      roomId,
+      song,
+    });
   };
 
   const removeFromQueue = (index) => {
@@ -422,10 +435,6 @@ useEffect(() => {
     });
   };
 
-  console.log("Room:", {
-    currentSong,
-    isPlaying,
-  });
   return (
     <div className="min-h-screen bg-[#09090F] text-white">
       <div className="mx-auto flex max-w-[1700px] flex-col gap-6 p-6 pb-36">
@@ -437,7 +446,6 @@ useEffect(() => {
         />
 
         <div className="grid flex-1 grid-cols-[280px_minmax(0,1fr)_280px] gap-6">
-          {/* Queue */}
           <QueuePanel
             queue={queue}
             isHost={isHost}
@@ -445,7 +453,6 @@ useEffect(() => {
             removeFromQueue={removeFromQueue}
           />
 
-          {/* Albums + Songs */}
           <AlbumsPanel
             albums={albums}
             selectedAlbum={selectedAlbum}
@@ -455,7 +462,6 @@ useEffect(() => {
             roomId={roomId}
           />
 
-          {/* Users */}
           <UsersPanel users={users} hostId={hostId} />
         </div>
       </div>
