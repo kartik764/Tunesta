@@ -40,7 +40,7 @@ export const Authprovider = ({ children }) => {
   // Login function.
   const login = (userData, authtoken) => {
     // Setting up the states.
-    setUser(JSON.parse(userdata));
+    setUser(userData);
     setToken(authtoken);
     setAuthenticated(true);
 

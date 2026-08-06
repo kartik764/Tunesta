@@ -26,11 +26,11 @@ function SongInfo({ currentSong }) {
 
       <div className="min-w-0">
         <h3 className="truncate text-sm font-semibold text-white">
-          {currentsong?.name || "Select an Album"}
+          {currentSong?.name || "Select an Album"}
         </h3>
 
         <p className="truncate text-xs text-zinc-400">
-          {currentsong?.albumTitle || "Tunesta Music"}
+          {currentSong?.albumTitle || "Tunesta Music"}
         </p>
       </div>
     </div>

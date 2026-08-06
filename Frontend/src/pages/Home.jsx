@@ -51,13 +51,13 @@ const Home = () => {
     songs,
     setSongs,
 
-    currentsong,
+    currentSong,
     setCurrentSong,
 
     currentIndex,
     setCurrentIndex,
 
-    isplaying,
+    isPlaying,
     setIsPlaying,
 
     duration,
@@ -90,8 +90,8 @@ const Home = () => {
 
   useAudioPlayer({
     audioref,
-    currentsong,
-    isplaying,
+    currentSong,
+    isPlaying,
     volume,
   });
 
@@ -135,7 +135,7 @@ const Home = () => {
         <div className="right">
           <Topbar
             handlehamburgerclick={() => setIsMenuOpen(true)}
-            currentsong={currentsong}
+            currentSong={currentSong}
           />
 
           <Maincontent
@@ -149,10 +149,10 @@ const Home = () => {
           <div className="playbar">
             <Playbar
               songs={songs}
-              isplaying={isplaying}
-              currentsong={currentsong}
+              isPlaying={isPlaying}
+              currentSong={currentSong}
               audioref={audioref}
-              setisplaying={setIsPlaying}
+              setisPlaying={setIsPlaying}
               handleNextButton={handleNextButton}
               handlePrevButton={handlePrevButton}
               duration={duration}
@@ -170,8 +170,6 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      <audio ref={audioref} />
     </>
   );
 };

@@ -78,6 +78,7 @@ const useMusicRoomSocket = ({ roomId, username }) => {
   };
 
   const pauseSong = (time) => {
+    console.log("EMIT PAUSE", time);
     socket.emit("pause", {
       roomId,
       time,

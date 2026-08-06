@@ -6,13 +6,12 @@ function PlaybackControls({
   playSong,
   pauseSong,
   currentSong,
-  isplaying,
+  isPlaying,
   audioref,
-  setisplaying,
+  setisPlaying,
   handlePrevButton,
   handleNextButton,
 }) {
-
   // ====================================================
   // ACTIONS
   // ====================================================
@@ -45,24 +44,23 @@ function PlaybackControls({
   const handlePlayPause = () => {
     if (!currentSong) return;
     if (!audioref.current) return;
-    
+
     //LOCAL MODE
     if (!roomId) {
-      if (isplaying) {
+      if (isPlaying) {
         audioref.current.pause();
-        setisplaying(false);
+        setisPlaying(false);
       } else {
         audioref.current.play().catch(() => {});
-        setisplaying(true);
+        setisPlaying(true);
       }
-
       return;
     }
 
     // ROOM MODE
     if (!isHost) return;
 
-    if (isplaying) {
+    if (isPlaying) {
       pauseSong(audioref.current.currentTime);
     } else {
       playSong({
@@ -87,7 +85,7 @@ function PlaybackControls({
         disabled={!currentSong || (roomId && !isHost)}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-600 text-white shadow-lg shadow-violet-600/30 transition hover:scale-105 hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {isplaying ? (
+        {isPlaying ? (
           <Pause size={24} fill="currentColor" />
         ) : (
           <Play size={24} fill="currentColor" className="ml-1" />

@@ -1,21 +1,11 @@
 import { motion } from "framer-motion";
-import {
-  Menu,
-  LogOut,
-  Music2,
-  Volume2,
-  Sparkles,
-} from "lucide-react";
+import { Menu, LogOut, Music2, Volume2, Sparkles } from "lucide-react";
 import { useAuth } from "../../context/Authcontext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../socket/socket";
 
-function Topbar({
-  handlehamburgerclick,
-  currentsong,
-  roomId,
-}) {
+function Topbar({ handlehamburgerclick, currentSong, roomId }) {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -62,10 +52,7 @@ function Topbar({
 
           <div>
             <div className="flex items-center gap-2">
-              <Sparkles
-                size={15}
-                className="text-violet-400"
-              />
+              <Sparkles size={15} className="text-violet-400" />
 
               <span className="text-xs font-semibold uppercase tracking-[0.25em] text-violet-400">
                 Now Playing
@@ -74,22 +61,16 @@ function Topbar({
 
             <div className="mt-1 flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 text-violet-400">
-                {currentsong ? (
-                  <Volume2 size={18} />
-                ) : (
-                  <Music2 size={18} />
-                )}
+                {currentSong ? <Volume2 size={18} /> : <Music2 size={18} />}
               </div>
 
               <div>
                 <h2 className="max-w-sm truncate text-base font-semibold text-white">
-                  {currentsong
-                    ? currentsong.name
-                    : "No song playing"}
+                  {currentSong ? currentSong.name : "No song playing"}
                 </h2>
 
                 <p className="text-sm text-zinc-400">
-                  {currentsong
+                  {currentSong
                     ? "Streaming with your room"
                     : "Choose a song to begin"}
                 </p>
@@ -130,9 +111,7 @@ function Topbar({
               className="transition-transform duration-300 group-hover:-translate-x-0.5"
             />
 
-            <span className="hidden font-medium sm:block">
-              Logout
-            </span>
+            <span className="hidden font-medium sm:block">Logout</span>
           </motion.button>
         </div>
       </div>

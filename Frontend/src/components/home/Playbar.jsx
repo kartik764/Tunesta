@@ -14,9 +14,9 @@ const Playbar = ({
   currentSong,
   playSong,
   pauseSong,
-  isplaying,
+  isPlaying,
   audioref,
-  setisplaying,
+  setisPlaying,
   handleNextButton,
   handlePrevButton,
   duration,
@@ -72,9 +72,9 @@ const Playbar = ({
             playSong={playSong}
             pauseSong={pauseSong}
             currentSong={currentSong}
-            isplaying={isplaying}
+            isPlaying={isPlaying}
             audioref={audioref}
-            setisplaying={setisplaying}
+            setisPlaying={setisPlaying}
             handlePrevButton={handlePrevButton}
             handleNextButton={handleNextButton}
           />

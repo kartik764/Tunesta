@@ -217,6 +217,7 @@ const Room = () => {
   // Pause
   useEffect(() => {
     const handlePause = ({ time }) => {
+      console.log("RECEIVED PAUSE", time);
       if (!audioref.current) return;
 
       audioref.current.pause();
