@@ -112,11 +112,9 @@ const Room = () => {
 
         if (!res.ok) {
           if (res.status === 401) {
-            console.log("Unauthorized");
             return;
           }
 
-          console.log("Album Fetch Failed");
           return;
         }
 
@@ -124,7 +122,7 @@ const Room = () => {
 
         setAlbums(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.log("Failed to fetch albums");
+        toast.error("Failed to load albums");
       }
     };
     fetchAlbums();
@@ -204,7 +202,7 @@ const Room = () => {
 
       audioref.current.currentTime = time + latency;
 
-      audioref.current.play().then().catch(err);
+      audioref.current.play().then().catch(() => {});
 
       setIsPlaying(true);
     };
