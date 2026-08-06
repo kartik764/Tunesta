@@ -1,20 +1,16 @@
-import {
-  SkipBack,
-  Play,
-  Pause,
-  SkipForward,
-} from "lucide-react";
+import { SkipBack, Play, Pause, SkipForward } from "lucide-react";
 
 function PlaybackControls({
   roomId,
   isHost,
-  currentsong,
+  playSong,
+  pauseSong,
+  currentSong,
   isplaying,
   audioref,
   setisplaying,
   handlePrevButton,
   handleNextButton,
-  socket,
 }) {
   const handlePrevious = () => {
     // LOCAL MODE
@@ -43,9 +39,9 @@ function PlaybackControls({
   };
 
   const handlePlayPause = () => {
-    if (!currentsong) return;
+    if (!currentSong) return;
 
-    // LOCAL MODE
+    //LOCAL MODE
     if (!roomId) {
       if (!audioref.current) return;
 
@@ -64,19 +60,20 @@ function PlaybackControls({
     if (!isHost) return;
 
     if (isplaying) {
-      socket.emit("pause", {
-        roomId,
-        time: audioref.current.currentTime,
-      });
+      pauseSong(audioref.current.currentTime);
     } else {
-      socket.emit("play", {
-        roomId,
-        song: currentsong,
+      playSong({
+        song: currentSong,
         time: audioref.current.currentTime,
-        sentAt: Date.now(),
       });
     }
   };
+
+  console.log({
+    isHost,
+    isplaying,
+    currentSong: currentSong?.name,
+  });
 
   return (
     <div className="flex items-center justify-center gap-4">
@@ -90,20 +87,13 @@ function PlaybackControls({
 
       <button
         onClick={handlePlayPause}
-        disabled={!currentsong || (roomId && !isHost)}
+        disabled={!currentSong || (roomId && !isHost)}
         className="flex h-14 w-14 items-center justify-center rounded-full bg-violet-600 text-white shadow-lg shadow-violet-600/30 transition hover:scale-105 hover:bg-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isplaying ? (
-          <Pause
-            size={24}
-            fill="currentColor"
-          />
+          <Pause size={24} fill="currentColor" />
         ) : (
-          <Play
-            size={24}
-            fill="currentColor"
-            className="ml-1"
-          />
+          <Play size={24} fill="currentColor" className="ml-1" />
         )}
       </button>
 

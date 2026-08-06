@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { socket } from "../socket";
+import { socket } from "../socket/socket";
 
 const usePlaybar = ({
   audioref,

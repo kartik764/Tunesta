@@ -4,12 +4,14 @@ import Seekbar from "./playbar/Seekbar";
 import VolumeControl from "./playbar/VolumeControl";
 
 import usePlaybar from "../../hooks/usePlaybar";
-import { socket } from "../../socket";
+import { socket } from "../../socket/socket";
 
 const Playbar = ({
   songs,
+  currentSong,
+  playSong,
+  pauseSong,
   isplaying,
-  currentsong,
   audioref,
   setisplaying,
   handleNextButton,
@@ -27,6 +29,7 @@ const Playbar = ({
   setdurationInSeconds,
   isHost,
   roomId,
+  handleSongEnded,
 }) => {
   const { isListener, handleSeek } = usePlaybar({
     audioref,
@@ -38,6 +41,12 @@ const Playbar = ({
     setcurrentTimeInSeconds,
     setdurationInSeconds,
     handleNextButton,
+    handleSongEnded,
+  });
+
+  console.log("Playbar:", {
+    currentSong,
+    isplaying,
   });
 
   return (
@@ -53,20 +62,21 @@ const Playbar = ({
 
       <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="lg:w-1/3">
-          <SongInfo currentsong={currentsong} />
+          <SongInfo currentSong={currentSong} />
         </div>
 
         <div className="flex justify-center lg:w-1/3">
           <PlaybackControls
             roomId={roomId}
             isHost={isHost}
-            currentsong={currentsong}
+            playSong={playSong}
+            pauseSong={pauseSong}
+            currentSong={currentSong}
             isplaying={isplaying}
             audioref={audioref}
             setisplaying={setisplaying}
             handlePrevButton={handlePrevButton}
             handleNextButton={handleNextButton}
-            socket={socket}
           />
         </div>
 
@@ -96,6 +106,23 @@ const Playbar = ({
           </span>
         </div>
       )}
+
+      <audio
+        ref={audioref}
+        onLoadedMetadata={() => {
+          if (!audioref.current) return;
+
+          setDuration(audioref.current.duration);
+          setdurationInSeconds(audioref.current.duration);
+        }}
+        onTimeUpdate={() => {
+          if (!audioref.current) return;
+
+          setCurrentTime(audioref.current.currentTime);
+          setcurrentTimeInSeconds(audioref.current.currentTime);
+        }}
+        onEnded={handleSongEnded}
+      />
     </div>
   );
 };

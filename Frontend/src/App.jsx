@@ -16,7 +16,15 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { Authenticated } = useAuth();
+  const { Authenticated, Loading } = useAuth();
+
+  if (Loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#09090F] text-white">
+        Loading...
+      </div>
+    );
+  }
 
   const router = createBrowserRouter([
     {

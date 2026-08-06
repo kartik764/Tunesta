@@ -7,11 +7,11 @@ const usePlayerState = () => {
 
   const [songs, setSongs] = useState([]);
 
-  const [isplaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const [currentsong, setCurrentSong] = useState(null);
+  const [currentSong, setCurrentSong] = useState(null);
 
   // =========================
   // 🔹 TIME STATES
@@ -76,23 +76,19 @@ const usePlayerState = () => {
     }
   };
 
-  // =========================
-  // 🔹 RETURN EVERYTHING
-  // =========================
-
   return {
     // SONGS
     songs,
     setSongs,
 
-    currentsong,
+    currentSong,
     setCurrentSong,
 
     currentIndex,
     setCurrentIndex,
 
     // PLAYBACK
-    isplaying,
+    isPlaying,
     setIsPlaying,
 
     // TIME

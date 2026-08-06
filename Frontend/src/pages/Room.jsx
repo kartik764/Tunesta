@@ -1,22 +1,32 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Playbar from "../components/home/Playbar";
-import usePlayerState from "../hooks/usePlayerState";
 import { toast } from "react-toastify";
-import { socket } from "../socket";
+
+import { socket } from "../socket/socket";
+
+import usePlayerState from "../hooks/usePlayerState";
+import useMusicRoomSocket from "../hooks/useMusicRoomSocket";
+
+import Playbar from "../components/home/Playbar";
+
+import RoomHeader from "../components/room/RoomHeader";
+import QueuePanel from "../components/room/QueuePanel";
+import UsersPanel from "../components/room/UsersPanel";
+import AlbumsPanel from "../components/room/AlbumsPanel";
 
 const Room = () => {
+  //Hooks
   const {
     songs,
     setSongs,
 
-    currentsong,
+    currentSong,
     setCurrentSong,
 
     currentIndex,
     setCurrentIndex,
 
-    isplaying,
+    isPlaying,
     setIsPlaying,
 
     duration,
@@ -41,68 +51,74 @@ const Room = () => {
     muteplaytoggle,
   } = usePlayerState();
 
+  //Routing
   const { roomId } = useParams();
-  const prevUserCount = useRef(0);
   const navigate = useNavigate();
 
-  //LOCAL ROOM STATES
+  //Refs
+  const prevUsersCount = useRef(0);
 
-  const [albums, setAlbums] = useState([]); //stores all album
-  const [users, setUsers] = useState([]); //stores room participants
-  const [hostId, setHostId] = useState(null); //tracks room host socket ID
-  const [isHost, setIsHost] = useState(false); //current user is host or not
+  //Room State
+  const [albums, setAlbums] = useState([]);
+
   const [currentSongName, setCurrentSongName] = useState("No Song Playing");
-  const [selectedAlbum, setSelectedAlbum] = useState(null);
+
   const [queue, setQueue] = useState([]);
 
-  // EFFECTS
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
 
-  //   1. FETCH ALBUMS
-  // │   │   ├── get JWT token
-  // │   │   ├── fetch /albums
-  // │   │   ├── verify auth
-  // │   │   └── store albums
+  //Repeated Logic
+  const token =
+    sessionStorage.getItem("tunesta_usertoken") ||
+    localStorage.getItem("tunesta_usertoken");
+
+  const username = sessionStorage.getItem("user_email") || "Anonymous";
+
+  const { users, hostId, isHost, leaveRoom, playSong, pauseSong } =
+    useMusicRoomSocket({
+      roomId,
+      username,
+    });
+
+  const handleLeaveRoom = () => {
+    leaveRoom();
+
+    sessionStorage.removeItem("activeRoom");
+
+    navigate("/home");
+  };
+
+  //useEffect1 - Fetch Albums
   useEffect(() => {
     const fetchAlbums = async () => {
       try {
-        const token =
-          //gets JWT token from browser storage(either from session or local)
-          sessionStorage.getItem("tunesta_usertoken") ||
-          localStorage.getItem("tunesta_usertoken");
-
-        console.log("TOKEN:", token);
-
-        //calls backend via api request
         const res = await fetch(`${import.meta.env.VITE_API_URL}/albums`, {
           headers: {
-            // sends jwt token to be, be verifies user
             Authorization: token ? `Bearer ${token}` : "",
           },
         });
 
         if (!res.ok) {
           if (res.status === 401) {
-            //invalid token
-            console.log("Unauthorized -> redirect login");
+            console.log("Unauthorized");
             return;
           }
-          console.log("Album fetch failed:", res.status);
+
+          console.log("Album Fetch Failed");
           return;
         }
 
-        const data = await res.json(); //convert be res into object
-        setAlbums(Array.isArray(data) ? data : []); //stores album
-      } catch (err) {
+        const data = await res.json();
+
+        setAlbums(Array.isArray(data) ? data : []);
+      } catch (error) {
         console.log("Failed to fetch albums");
       }
     };
-
     fetchAlbums();
   }, []);
 
-  //   2. REFRESH RECOVERY
-  // │   │   ├── check sessionStorage
-  // │   │   └── restore room after refresh
+  //useEffect2 - Refresh Recovery
   useEffect(() => {
     const savedRoom = sessionStorage.getItem("activeRoom");
 
@@ -111,629 +127,364 @@ const Room = () => {
     }
   }, []);
 
-  //   3. AUDIO UNLOCK
-  // │   │   ├── muted autoplay trick
-  // │   │   ├── browser autoplay permission
-  // │   │   └── remove click listener
+  //useEffect 3 - Audio Unlock
   useEffect(() => {
-    //unlock browser audio playback
     const unlockAudio = () => {
-      if (!audioref.current) return; //ensure audio element exists before using it
+      if (!audioref.current) return;
 
-      audioref.current.muted = true; //browser allows muted autoplay
+      audioref.current.muted = true;
 
       audioref.current
-        .play() //play audio silently
+        .play()
         .then(() => {
-          audioref.current.pause(); //stops silent playback instantly
-          audioref.current.currentTime = 0; //reset audio
-          audioref.current.muted = false; // future playback works normally
-
-          console.log("🔓 Audio unlocked");
+          audioref.current.pause();
+          audioref.current.currentTime = 0;
+          audioref.current.muted = false;
         })
         .catch(() => {});
 
-      window.removeEventListener("click", unlockAudio); //remove click listener
+      window.removeEventListener("click", unlockAudio);
     };
 
-    window.addEventListener("click", unlockAudio); //add click listener
+    window.addEventListener("click", unlockAudio);
 
-    return () => window.removeEventListener("click", unlockAudio); //prevents memory leaks when component unmounts
+    return () => {
+      window.removeEventListener("click", unlockAudio);
+    };
   }, []);
 
-  //   4. SOCKET CONNECT + JOIN
-  // │   │   ├── ensure socket connected
-  // │   │   ├── emit join_room
-  // │   │   └── send username + roomId
+  //useEffect5 - Room Listeners
   useEffect(() => {
-    //runs when roomId changes
-    if (!socket.connected) socket.connect(); //ensure connection
-
-    socket.emit("join_room", {
-      //send req to be, add user to room
-      roomId,
-      username: sessionStorage.getItem("user_email") || "Anonymous",
-    });
-
-    //on unmount, leave the room
-    return () => {};
-  }, [roomId]);
-
-  const prevUsersCount = useRef(0);
-
-  //    5. ROOM LISTENERS
-  // │   │   │
-  // │   │   ├── room_users
-  // │   │   │   ├── update users
-  // │   │   │   ├── join toast
-  // │   │   │   └── previous count tracking
-  // │   │   │
-  // │   │   ├── host_info
-  // │   │   │   └── update hostId
-  // │   │   │
-  // │   │   └── user_left
-  // │   │       └── leave toast
-  useEffect(() => {
-    const handleUsers = (updatedUsers) => {
-      // Someone joined
-      if (updatedUsers.length > prevUsersCount.current) {
-        const latestUser = updatedUsers[updatedUsers.length - 1];
-
-        if (latestUser.username !== sessionStorage.getItem("user_email")) {
-          toast.success(`${latestUser.username} joined the room 🎉`);
-        }
-      }
-
-      prevUsersCount.current = updatedUsers.length;
-
-      setUsers(updatedUsers);
-    };
-
-    const handleHost = (host) => {
-      setHostId(host);
-    };
-
     const handleUserLeft = (username) => {
       if (username !== sessionStorage.getItem("user_email")) {
         toast.info(`${username} left the room 👋`);
       }
     };
-
-    socket.on("room_users", handleUsers);
-    socket.on("host_info", handleHost);
     socket.on("user_left", handleUserLeft);
 
     return () => {
-      socket.off("room_users", handleUsers);
-      socket.off("host_info", handleHost);
       socket.off("user_left", handleUserLeft);
     };
   }, []);
 
-  // 6. HOST CHECK
-  // │   │   ├── compare socket.id
-  // │   │   └── determine isHost
-
-  useEffect(() => {
-    if (!socket.id || !hostId) return;
-    setIsHost(socket.id === hostId);
-  }, [hostId]);
-
-  //    7. PLAY EVENT
-  // │   │   ├── receive play event
-  // │   │   ├── latency compensation
-  // │   │   ├── sync audio src
-  // │   │   ├── sync currentTime
-  // │   │   └── play audio
-
-  useEffect(() => {
-    const handleHost = (host) => {
-      console.log("👑 Host received:", host);
-      setHostId(host);
-    };
-
-    socket.on("host_info", handleHost);
-
-    return () => socket.off("host_info", handleHost);
-  }, []);
-
-  //Play Event
+  //useEffect7 - Play Event  (Done)
   useEffect(() => {
     const handlePlay = ({ song, time, sentAt }) => {
-      console.log("🎵 PLAY EVENT RECEIVED");
-      console.log("SONG:", song);
-
-      if (!audioref.current) return;
-
-      // IMPORTANT
-      if (!song || !song.path) {
-        console.log("❌ Invalid song object:", song);
+      if (!audioref.current) {
+        console.log("Audio ref is NULL");
         return;
       }
 
-      const src = song.path.startsWith("http")
+      setCurrentSong(song);
+
+      setCurrentSongName(song.name);
+
+      const songPath = song.path.startsWith("http")
         ? song.path
         : `${import.meta.env.VITE_API_URL}${song.path}`;
 
-      console.log("SRC:", src);
+      audioref.current.src = songPath;
 
-      console.log("CURRENT AUDIO SRC:", audioref.current.src);
+      const latency = (Date.now() - sentAt) / 1000;
 
-      if (audioref.current.src !== src) {
-        console.log("🆕 NEW SONG");
-        audioref.current.src = src;
-      } else {
-        console.log("▶ RESUMING SAME SONG");
-      }
-
-      // latency compensation
-      const delay = sentAt ? (Date.now() - sentAt) / 1000 : 0;
-      console.log("DELAY:", delay);
-      audioref.current.currentTime = time + delay;
-
-      console.log("⏯ CALLING PLAY()");
+      audioref.current.currentTime = time + latency;
 
       audioref.current
         .play()
-        .then(() => {
-          console.log("✅ Audio synced successfully");
-        })
-        .catch((err) => {
-          console.log("❌ Playback failed:", err);
-        });
+        .then(() => console.log("Audio Playing"))
+        .catch((err) => console.log("Play Error:", err));
 
       setIsPlaying(true);
-      setCurrentSong(song);
-      setCurrentSongName(song.name);
+
+      console.log("After setState:", {
+        song,
+        isPlaying,
+      });
     };
 
     socket.on("play", handlePlay);
 
-    return () => socket.off("play", handlePlay);
+    return () => {
+      socket.off("play", handlePlay);
+    };
   }, []);
 
-  // queue
+  //useEffect8 - Pause Event (Done)
   useEffect(() => {
-    socket.on("queue_updated", (updatedQueue) => {
-      setQueue(updatedQueue);
-    });
-
-    return () => socket.off("queue_updated");
-  }, []);
-
-  //    8. PAUSE EVENT
-  // │   │   ├── pause audio
-  // │   │   └── sync pause time
-  useEffect(() => {
-    socket.on("pause", (time) => {
+    const handlePause = ({ time }) => {
       if (!audioref.current) return;
 
       audioref.current.pause();
-      audioref.current.currentTime = time || 0;
+      audioref.current.currentTime = time;
 
+      setCurrentTime(time);
+      setcurrentTimeInSeconds(time);
       setIsPlaying(false);
-    });
+    };
 
-    return () => socket.off("pause");
+    socket.on("pause", handlePause);
+
+    return () => {
+      socket.off("pause", handlePause);
+    };
   }, []);
 
-  //   9. SEEK EVENT
-  // │   │   ├── receive seek time
-  // │   │   └── update currentTime
+  //useEffect9 - Seek Event
   useEffect(() => {
-    socket.on("seek", ({ time, sentAt }) => {
+    const handleSeek = ({ time }) => {
       if (!audioref.current) return;
 
-      const delay = (Date.now() - sentAt) / 1000;
-      audioref.current.currentTime = time + delay;
-    });
+      audioref.current.currentTime = time;
 
-    return () => socket.off("seek");
+      setCurrentTime(time);
+      setcurrentTimeInSeconds(time);
+    };
+
+    socket.on("seek", handleSeek);
+
+    return () => {
+      socket.off("seek", handleSeek);
+    };
   }, []);
 
-  //    10. VOLUME EVENT
-  // │       └── sync volume
+  //useEffect10 : Volume Change
   useEffect(() => {
-    socket.on("volume_change", (vol) => {
-      setVolume(vol);
-    });
+    const handleVolume = (newVolume) => {
+      if (!audioref.current) return;
 
-    return () => socket.off("volume_change");
+      audioref.current.volume = newVolume;
+      setVolume(newVolume);
+    };
+
+    socket.on("volume_change", handleVolume);
+
+    return () => {
+      socket.off("volume_change", handleVolume);
+    };
+  }, []);
+
+  // useEffect11 - Queue Finished
+useEffect(() => {
+  const handleQueueFinished = () => {
+    if (audioref.current) {
+      audioref.current.pause();
+      audioref.current.src = "";
+      audioref.current.currentTime = 0;
+    }
+
+    setCurrentSong(null);
+    setCurrentSongName("No Song Playing");
+    setIsPlaying(false);
+
+    setCurrentTime(0);
+    setcurrentTimeInSeconds(0);
+  };
+
+  socket.on("queue_finished", handleQueueFinished);
+
+  return () => {
+    socket.off("queue_finished", handleQueueFinished);
+  };
+}, []);
+
+  // useEffect11 - Queue Updated
+  useEffect(() => {
+    const handleQueueUpdated = (updatedQueue) => {
+      console.log("QUEUE UPDATED:", updatedQueue);
+
+      setQueue(updatedQueue);
+    };
+
+    socket.on("queue_updated", handleQueueUpdated);
+
+    return () => {
+      socket.off("queue_updated", handleQueueUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleQueueError = (message) => {
+      toast.warning(message);
+    };
+
+    socket.on("queue_error", handleQueueError);
+
+    return () => {
+      socket.off("queue_error", handleQueueError);
+    };
+  }, []);
+
+  // useEffect - Sync State
+  useEffect(() => {
+    const handleSyncState = ({ song, time, isPlaying, volume, queue }) => {
+      if (!audioref.current) return;
+
+      // Queue
+      setQueue(queue);
+
+      // Volume
+      audioref.current.volume = volume;
+      setVolume(volume);
+
+      // Nothing playing
+      if (!song) return;
+
+      // Current song
+      setCurrentSong(song);
+      setCurrentSongName(song.name);
+
+      const songPath = song.path.startsWith("http")
+        ? song.path
+        : `${import.meta.env.VITE_API_URL}${song.path}`;
+
+      audioref.current.src = songPath;
+
+      // Sync time
+      audioref.current.currentTime = time;
+
+      setCurrentTime(time);
+      setcurrentTimeInSeconds(time);
+
+      if (isPlaying) {
+        audioref.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch(console.error);
+      } else {
+        setIsPlaying(false);
+      }
+    };
+
+    socket.on("sync_state", handleSyncState);
+
+    return () => {
+      socket.off("sync_state", handleSyncState);
+    };
   }, []);
 
   //FUNCTIONS
 
-  //   leaveRoom()
-  // │   │   ├── clear sessionStorage
-  // │   │   ├── emit leave_room
-  // │   │   └── navigate home
-
-  const leaveRoom = () => {
-    sessionStorage.removeItem("activeRoom");
-    socket.emit("leave_room", roomId);
-    navigate("/");
-  };
-
-  //   handlePlayClick()
-  // │   │   ├── host-only
-  // │   │   ├── play audio
-  // │   │   └── emit play event
-  const handlePlayClick = () => {
-    if (!isHost || !audioref.current) return;
-
-    audioref.current.play();
-    setIsPlaying(true);
-
-    socket.emit("play", {
-      roomId,
-      song: currentsong,
-      time: audioref.current.currentTime,
-      sentAt: Date.now(),
-    });
-  };
-
-  const handlePauseClick = () => {
-    if (!isHost || !audioref.current) return;
-
-    audioref.current.pause();
-
-    socket.emit("pause", {
-      roomId,
-      time: audioref.current.currentTime,
-    });
-  };
-
-  //   playTestSong()
-  // │   │   └── emit test song
-  const playTestSong = () => {
-    if (!isHost) return;
-
-    const songUrl =
-      "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-
-    socket.emit("play", {
-      roomId,
-      song: {
-        name: "Test Song",
-        path: songUrl,
-      },
-      time: 0,
-      sentAt: Date.now(),
-    });
-  };
-
-  //    handleSeek()
-  // │   │   ├── host-only
-  // │   │   └── emit seek event
-  const handleSeek = () => {
-    if (!isHost || !audioref.current) return;
-
-    socket.emit("seek", {
-      roomId,
-      time: audioref.current.currentTime,
-      sentAt: Date.now(),
-    });
-  };
-
-  //    handleAlbumClick()
-  // │   │   └── set selected album
+  //handlealbumclick()
   const handleAlbumClick = (album) => {
     setSelectedAlbum(album);
   };
 
-  //   handleSongClick()
-  // │       ├── host-only
-  // │       ├── select song
-  // │       └── emit play event
+  //handlealbumclick()
   const handleSongClick = (song) => {
+    console.log("Song Clicked");
+    console.log("isHost:", isHost);
+
     if (!isHost) return;
 
-    socket.emit("play", {
-      roomId,
+    console.log("Calling playSong");
+
+    playSong({
       song,
       time: 0,
-      sentAt: Date.now(),
     });
   };
 
+  //playNextInQueue()
   const playNextInQueue = () => {
-    console.log("▶ Play Queue clicked");
-    console.log("Socket connected:", socket.connected);
+    if (!isHost) return;
 
-    socket.emit("play_next", roomId);
+    socket.emit("play_next", {
+      roomId,
+    });
   };
 
+  //handlequeuesongclick()
+  const handleQueueSongClick = (song) => {
+    console.log("ADD TO QUEUE CLICKED", song.name);
+    socket.emit("add_to_queue", {
+      roomId,
+      song,
+    });
+  };
+
+  const handleSongEnded = () => {
+    // Local mode
+    if (!roomId) {
+      handleNextButton();
+      return;
+    }
+
+    // Room mode
+    if (!isHost) return;
+
+    playNextInQueue();
+  };
+
+  const removeFromQueue = (index) => {
+    socket.emit("remove_from_queue", {
+      roomId,
+      index,
+    });
+  };
+
+  console.log("Room:", {
+    currentSong,
+    isPlaying,
+  });
   return (
-    <div
-      className="container flex"
-      style={{ height: "100vh", flexDirection: "column" }}
-    >
-      {/* TOP BAR
-│   │   ├── host indicator
-│   │   ├── room ID
-│   │   ├── copy button
-│   │   ├── current song
-│   │   └── leave room button */}
+    <div className="min-h-screen bg-[#09090F] text-white">
+      <div className="mx-auto flex max-w-[1700px] flex-col gap-6 p-6 pb-36">
+        <RoomHeader
+          roomId={roomId}
+          isHost={isHost}
+          currentSongName={currentSongName}
+          leaveRoom={handleLeaveRoom}
+        />
 
-      <div className="room-topbar glass-effect">
-        {/* HOST */}
-        <div className="topbar-section">
-          <div className="topbar-icon">👑</div>
+        <div className="grid flex-1 grid-cols-[280px_minmax(0,1fr)_280px] gap-6">
+          {/* Queue */}
+          <QueuePanel
+            queue={queue}
+            isHost={isHost}
+            playNextInQueue={playNextInQueue}
+            removeFromQueue={removeFromQueue}
+          />
 
-          <div>
-            <div className="topbar-label">Host</div>
+          {/* Albums + Songs */}
+          <AlbumsPanel
+            albums={albums}
+            selectedAlbum={selectedAlbum}
+            handleAlbumClick={handleAlbumClick}
+            handleSongClick={handleSongClick}
+            isHost={isHost}
+            roomId={roomId}
+          />
 
-            <div className="topbar-value">{isHost ? "You" : "Someone"}</div>
-          </div>
-        </div>
-
-        {/* ROOM ID */}
-        <div className="topbar-section">
-          <div className="topbar-icon">👥</div>
-
-          <div>
-            <div className="topbar-label">Room ID</div>
-
-            <div className="topbar-value">{roomId}</div>
-          </div>
-
-          <button
-            className="copy-btn"
-            onClick={() => {
-              navigator.clipboard.writeText(roomId);
-              alert("Room ID copied!");
-            }}
-          >
-            Copy
-          </button>
-        </div>
-
-        {/* SONG */}
-        <div className="topbar-section">
-          <div className="topbar-icon">🎵</div>
-
-          <div>
-            <div className="topbar-label">Now Playing</div>
-
-            <div className="topbar-value">{currentSongName}</div>
-          </div>
-        </div>
-
-        {/* LEAVE */}
-        <button className="leave-room-btn" onClick={leaveRoom}>
-          Leave Room
-        </button>
-      </div>
-
-      {/*   MAIN LAYOUT */}
-      <div className="room-layout" style={{ flex: 1, display: "flex" }}>
-        {/* 🎶 LEFT: QUEUE */}
-        <div className="room-users" style={{ width: "20%", padding: "15px" }}>
-          <h3>🎶 Queue</h3>
-
-          <div style={{ marginTop: "10px", color: "#aaa" }}>
-            {queue.map((song, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  background: "#1a1a1a",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  marginBottom: "8px",
-                }}
-              >
-                <span>
-                  {i + 1}. {song.name}
-                </span>
-
-                {isHost && (
-                  <button
-                    onClick={() =>
-                      socket.emit("remove_from_queue", {
-                        roomId,
-                        index: i,
-                      })
-                    }
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      color: "red",
-                      cursor: "pointer",
-                      fontSize: "16px",
-                    }}
-                  >
-                    ❌
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CENTER PANEL
-│   │   │   │
-│   │   │   ├── albums section
-│   │   │   ├── songs section
-│   │   │   ├── hidden audio element
-│   │   │   ├── Playbar component
-│   │   │   └── host controls */}
-        <div
-          className="room-center"
-          style={{
-            width: "60%",
-            padding: "20px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>
-            <h3>Albums</h3>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "15px",
-                marginTop: "10px",
-              }}
-            >
-              {Array.isArray(albums) &&
-                albums.map((album, i) => (
-                  <div
-                    key={i}
-                    className="album-card"
-                    onClick={() => handleAlbumClick(album)}
-                    style={{
-                      border:
-                        selectedAlbum?.title === album.title
-                          ? "2px solid #1DB954"
-                          : "none",
-                    }}
-                  >
-                    <img
-                      src={
-                        album.cover.startsWith("http")
-                          ? album.cover
-                          : `${import.meta.env.VITE_API_URL}${album.cover}`
-                      }
-                      alt="album"
-                    />
-
-                    <div className="play-overlay">▶</div>
-
-                    <p>{album.title}</p>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {selectedAlbum && (
-            <div style={{ marginTop: "20px" }}>
-              <h3>🎵 Songs</h3>
-
-              {selectedAlbum.songs.map((song, i) => (
-                <div
-                  key={i}
-                  style={{
-                    padding: "8px",
-                    marginBottom: "6px",
-                    borderRadius: "6px",
-                    background: "#1a1a1a",
-
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <span>🎶 {song.name}</span>
-
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                    }}
-                  >
-                    <button onClick={() => isHost && handleSongClick(song)}>
-                      ▶
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        socket.emit("add_to_queue", {
-                          roomId,
-                          song: {
-                            name: song.name,
-                            path: song.path,
-                          },
-                        })
-                      }
-                    >
-                      ➕
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div
-            className="glass-effect"
-            style={{
-              padding: "15px",
-              borderRadius: "10px",
-              textAlign: "center",
-            }}
-          >
-            <p style={{ color: "#aaa" }}>Music player</p>
-
-            <audio ref={audioref} />
-
-            <Playbar
-              songs={songs}
-              isplaying={isplaying}
-              currentsong={currentsong}
-              audioref={audioref}
-              setisplaying={setIsPlaying}
-              handleNextButton={handleNextButton}
-              handlePrevButton={handlePrevButton}
-              duration={duration}
-              setDuration={setDuration}
-              currentTime={currentTime}
-              setCurrentTime={setCurrentTime}
-              volume={volume}
-              setVolume={setVolume}
-              muteplaytoggle={muteplaytoggle}
-              currentTimeInSeconds={currentTimeInSeconds}
-              setcurrentTimeInSeconds={setcurrentTimeInSeconds}
-              durationInSeconds={durationInSeconds}
-              setdurationInSeconds={setdurationInSeconds}
-              isHost={isHost}
-              roomId={roomId}
-            />
-
-            {isHost && (
-              <button
-                onClick={playNextInQueue}
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 12px",
-                  borderRadius: "6px",
-                  border: "none",
-                  background: "#1DB954",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                }}
-              >
-                ▶ Play Queue
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* 👥 RIGHT: USERS */}
-        <div className="left" style={{ width: "20%", padding: "15px" }}>
-          <h3>👥 Users</h3>
-
-          <div style={{ marginTop: "10px" }}>
-            {users.map((u, i) => (
-              <div
-                key={i}
-                className="glass-effect"
-                style={{
-                  padding: "8px",
-                  borderRadius: "6px",
-                  marginBottom: "8px",
-                }}
-              >
-                {u.username} {u.socketId === hostId && "👑"}
-              </div>
-            ))}
-          </div>
+          {/* Users */}
+          <UsersPanel users={users} hostId={hostId} />
         </div>
       </div>
+
+      <Playbar
+        songs={songs}
+        currentSong={currentSong}
+        playSong={playSong}
+        pauseSong={pauseSong}
+        isplaying={isPlaying}
+        audioref={audioref}
+        setisplaying={setIsPlaying}
+        handleNextButton={handleNextButton}
+        handlePrevButton={handlePrevButton}
+        handleSongEnded={handleSongEnded}
+        duration={duration}
+        setDuration={setDuration}
+        currentTime={currentTime}
+        setCurrentTime={setCurrentTime}
+        volume={volume}
+        setVolume={setVolume}
+        muteplaytoggle={muteplaytoggle}
+        currentTimeInSeconds={currentTimeInSeconds}
+        setcurrentTimeInSeconds={setcurrentTimeInSeconds}
+        durationInSeconds={durationInSeconds}
+        setdurationInSeconds={setdurationInSeconds}
+        isHost={isHost}
+        roomId={roomId}
+      />
     </div>
   );
 };
