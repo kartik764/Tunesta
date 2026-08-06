@@ -41,31 +41,15 @@ const usePlaybar = ({
       setcurrentTimeInSeconds(audio.currentTime);
     };
 
-    const onEnded = () => {
-      // Local Mode
-      if (!roomId) {
-        handleNextButton();
-        return;
-      }
-
-      // Listener cannot control playback
-      if (!isHost) return;
-
-      socket.emit("play_next", roomId);
-    };
-
     audio.addEventListener("loadedmetadata", onLoadedMetadata);
     audio.addEventListener("timeupdate", onTimeUpdate);
-    audio.addEventListener("ended", onEnded);
 
     return () => {
       audio.removeEventListener("loadedmetadata", onLoadedMetadata);
 
       audio.removeEventListener("timeupdate", onTimeUpdate);
-
-      audio.removeEventListener("ended", onEnded);
     };
-  }, [audioref, roomId, isHost, handleNextButton]);
+  }, [audioref]);
 
   // AUDIO SETTINGS
   useEffect(() => {

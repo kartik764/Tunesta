@@ -11,7 +11,6 @@ export default function AlbumsPanel({
 }) {
   return (
     <div className="flex h-[calc(100vh-250px)] flex-col gap-6 overflow-hidden rounded-3xl border border-white/10 bg-[#111118]/80 p-6 backdrop-blur-xl">
-      {/* Albums */}
 
       <div>
         <h2 className="mb-5 text-xl font-semibold text-white">Albums</h2>
@@ -44,8 +43,6 @@ export default function AlbumsPanel({
           ))}
         </div>
       </div>
-
-      {/* Songs */}
 
       {selectedAlbum && (
         <div className="flex-1 overflow-y-auto">

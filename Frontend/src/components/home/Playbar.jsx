@@ -1,13 +1,16 @@
+// Imports
 import SongInfo from "./playbar/SongInfo";
 import PlaybackControls from "./playbar/PlaybackControls";
 import Seekbar from "./playbar/Seekbar";
 import VolumeControl from "./playbar/VolumeControl";
 
+// Hook
 import usePlaybar from "../../hooks/usePlaybar";
+
+// Socket
 import { socket } from "../../socket/socket";
 
 const Playbar = ({
-  songs,
   currentSong,
   playSong,
   pauseSong,
@@ -31,6 +34,10 @@ const Playbar = ({
   roomId,
   handleSongEnded,
 }) => {
+  // =========================
+  // PLAYBAR HOOK
+  // =========================
+
   const { isListener, handleSeek } = usePlaybar({
     audioref,
     roomId,
@@ -40,13 +47,6 @@ const Playbar = ({
     setCurrentTime,
     setcurrentTimeInSeconds,
     setdurationInSeconds,
-    handleNextButton,
-    handleSongEnded,
-  });
-
-  console.log("Playbar:", {
-    currentSong,
-    isplaying,
   });
 
   return (
@@ -107,22 +107,7 @@ const Playbar = ({
         </div>
       )}
 
-      <audio
-        ref={audioref}
-        onLoadedMetadata={() => {
-          if (!audioref.current) return;
-
-          setDuration(audioref.current.duration);
-          setdurationInSeconds(audioref.current.duration);
-        }}
-        onTimeUpdate={() => {
-          if (!audioref.current) return;
-
-          setCurrentTime(audioref.current.currentTime);
-          setcurrentTimeInSeconds(audioref.current.currentTime);
-        }}
-        onEnded={handleSongEnded}
-      />
+      <audio ref={audioref} onEnded={handleSongEnded} />
     </div>
   );
 };

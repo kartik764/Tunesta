@@ -9,24 +9,23 @@ function VolumeControl({
   isListener,
   socket,
 }) {
+  
+  // ====================================================
+  // ACTIONS
+  // ====================================================
   const handleVolumeChange = (e) => {
     const vol = parseFloat(e.target.value);
 
-    // LOCAL MODE
-    if (!roomId) {
-      setVolume(vol);
-      return;
-    }
-
-    // ROOM MODE (Host Only)
-    if (!isHost) return;
+    if (roomId && !isHost) return;
 
     setVolume(vol);
 
-    socket.emit("volume_change", {
-      roomId,
-      volume: vol,
-    });
+    if (roomId) {
+      socket.emit("volume_change", {
+        roomId,
+        volume: vol,
+      });
+    }
   };
 
   return (
@@ -36,11 +35,7 @@ function VolumeControl({
         disabled={isListener}
         className="rounded-lg p-2 text-zinc-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {volume === 0 ? (
-          <VolumeX size={20} />
-        ) : (
-          <Volume2 size={20} />
-        )}
+        {volume === 0 ? <VolumeX size={20} /> : <Volume2 size={20} />}
       </button>
 
       <input

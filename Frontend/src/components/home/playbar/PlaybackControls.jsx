@@ -12,6 +12,10 @@ function PlaybackControls({
   handlePrevButton,
   handleNextButton,
 }) {
+
+  // ====================================================
+  // ACTIONS
+  // ====================================================
   const handlePrevious = () => {
     // LOCAL MODE
     if (!roomId) {
@@ -40,11 +44,10 @@ function PlaybackControls({
 
   const handlePlayPause = () => {
     if (!currentSong) return;
-
+    if (!audioref.current) return;
+    
     //LOCAL MODE
     if (!roomId) {
-      if (!audioref.current) return;
-
       if (isplaying) {
         audioref.current.pause();
         setisplaying(false);
@@ -68,12 +71,6 @@ function PlaybackControls({
       });
     }
   };
-
-  console.log({
-    isHost,
-    isplaying,
-    currentSong: currentSong?.name,
-  });
 
   return (
     <div className="flex items-center justify-center gap-4">

@@ -22,7 +22,7 @@ export default function UsersPanel({ users, hostId }) {
         ) : (
           users.map((user, index) => (
             <div
-              key={index}
+              key={user.socketId}
               className="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 p-3 transition hover:bg-white/10"
             >
               <div className="min-w-0">

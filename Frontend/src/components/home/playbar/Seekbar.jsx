@@ -6,6 +6,10 @@ function Seekbar({
   handleSeek,
   isListener,
 }) {
+
+  // ====================================================
+  // DERIVED VALUES
+  // ====================================================
   const progress =
     durationInSeconds > 0
       ? (currentTimeInSeconds / durationInSeconds) * 100
@@ -16,12 +20,9 @@ function Seekbar({
       <div
         onClick={handleSeek}
         className={`group relative h-1.5 w-full rounded-full bg-white/10 transition ${
-          isListener
-            ? "cursor-not-allowed opacity-60"
-            : "cursor-pointer"
+          isListener ? "cursor-not-allowed opacity-60" : "cursor-pointer"
         }`}
       >
-        {/* Progress */}
         <div
           className="absolute left-0 top-0 h-full rounded-full bg-violet-500"
           style={{
@@ -29,7 +30,6 @@ function Seekbar({
           }}
         />
 
-        {/* Thumb */}
         <div
           className="absolute top-1/2 h-4 w-4 -translate-y-1/2 rounded-full border-2 border-white bg-violet-500 opacity-0 shadow-lg shadow-violet-500/40 transition group-hover:opacity-100"
           style={{
