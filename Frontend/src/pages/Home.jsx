@@ -36,12 +36,8 @@ const Home = () => {
      Rooms
   ========================= */
 
-  const {
-    roomInput,
-    setRoomInput,
-    handleCreateRoom,
-    handleJoinRoom,
-  } = useRoom();
+  const { roomInput, setRoomInput, handleCreateRoom, handleJoinRoom } =
+    useRoom();
 
   /* =========================
      Player State
@@ -116,8 +112,12 @@ const Home = () => {
 
       <CursorGlow />
 
-      <div className="container flex">
-        <div className={`left ${isMenuOpen ? "sidebaropen" : ""}`}>
+      {/* Whole page scrolls */}
+      <div className="min-h-screen w-full overflow-x-hidden">
+        {/* Fixed sidebar */}
+        <div
+          className={`${isMenuOpen ? "block" : "hidden"} absolute top-0 left-0 z-40 w-80 max-w-[86vw] shadow-2xl shadow-black/40 lg:z-20 lg:block lg:w-80 lg:max-w-none lg:shadow-none`}
+        >
           <Sidebar
             songs={songs}
             handlesongclick={handleSongClick}
@@ -132,43 +132,72 @@ const Home = () => {
           />
         </div>
 
-        <div className="right">
-          <Topbar
-            handlehamburgerclick={() => setIsMenuOpen(true)}
-            currentSong={currentSong}
-          />
+        {/* Main page content */}
+        <div className="min-w-0 lg:ml-80">
+          <div className="overflow-x-hidden p-3 sm:p-5 lg:p-6">
+            <div className="space-y-3 sm:space-y-4 lg:space-y-5">
+              <Topbar
+                handlehamburgerclick={() => setIsMenuOpen(true)}
+                currentSong={currentSong}
+              />
 
-          <Maincontent
-            albums={filteredAlbums}
-            handleAlbumClick={handleAlbumClick}
-            query={query}
-            setQuery={setQuery}
-            isSearchMode={isSearchMode}
-          />
+              <Maincontent
+                albums={filteredAlbums}
+                handleAlbumClick={handleAlbumClick}
+                query={query}
+                setQuery={setQuery}
+                isSearchMode={isSearchMode}
+              />
 
-          <div className="playbar">
-            <Playbar
-              songs={songs}
-              isPlaying={isPlaying}
-              currentSong={currentSong}
-              audioref={audioref}
-              setisPlaying={setIsPlaying}
-              handleNextButton={handleNextButton}
-              handlePrevButton={handlePrevButton}
-              duration={duration}
-              setDuration={setDuration}
-              currentTime={currentTime}
-              setCurrentTime={setCurrentTime}
-              volume={volume}
-              setVolume={setVolume}
-              muteplaytoggle={muteplaytoggle}
-              currentTimeInSeconds={currentTimeInSeconds}
-              setcurrentTimeInSeconds={setcurrentTimeInSeconds}
-              durationInSeconds={durationInSeconds}
-              setdurationInSeconds={setdurationInSeconds}
-            />
+              <div className="w-full rounded-xl">
+                <Playbar
+                  songs={songs}
+                  isPlaying={isPlaying}
+                  currentSong={currentSong}
+                  audioref={audioref}
+                  setisPlaying={setIsPlaying}
+                  handleNextButton={handleNextButton}
+                  handlePrevButton={handlePrevButton}
+                  duration={duration}
+                  setDuration={setDuration}
+                  currentTime={currentTime}
+                  setCurrentTime={setCurrentTime}
+                  volume={volume}
+                  setVolume={setVolume}
+                  muteplaytoggle={muteplaytoggle}
+                  currentTimeInSeconds={currentTimeInSeconds}
+                  setcurrentTimeInSeconds={setcurrentTimeInSeconds}
+                  durationInSeconds={durationInSeconds}
+                  setdurationInSeconds={setdurationInSeconds}
+                />
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Playbar is now part of normal page flow */}
+        {/* <div className="w-screen">
+          <Playbar
+            songs={songs}
+            isPlaying={isPlaying}
+            currentSong={currentSong}
+            audioref={audioref}
+            setisPlaying={setIsPlaying}
+            handleNextButton={handleNextButton}
+            handlePrevButton={handlePrevButton}
+            duration={duration}
+            setDuration={setDuration}
+            currentTime={currentTime}
+            setCurrentTime={setCurrentTime}
+            volume={volume}
+            setVolume={setVolume}
+            muteplaytoggle={muteplaytoggle}
+            currentTimeInSeconds={currentTimeInSeconds}
+            setcurrentTimeInSeconds={setcurrentTimeInSeconds}
+            durationInSeconds={durationInSeconds}
+            setdurationInSeconds={setdurationInSeconds}
+          />
+        </div> */}
       </div>
     </>
   );

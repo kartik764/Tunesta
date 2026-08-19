@@ -10,17 +10,17 @@ export default function AlbumsPanel({
   roomId,
 }) {
   return (
-    <div className="flex h-[calc(100vh-250px)] flex-col gap-6 overflow-hidden rounded-3xl border border-white/10 bg-[#111118]/80 p-6 backdrop-blur-xl">
+    <div className="flex min-w-0 flex-col gap-5 px-1 sm:px-2">
 
       <div>
-        <h2 className="mb-5 text-xl font-semibold text-white">Albums</h2>
+        <h2 className="mb-4 border-b border-white/5 pb-3 text-xl font-semibold text-white">Albums</h2>
 
-        <div className="grid grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5">
+        <div className="grid max-h-[620px] grid-cols-2 gap-4 overflow-y-auto pr-2 sm:grid-cols-3 xl:grid-cols-4">
           {albums.map((album, index) => (
             <button
               key={index}
               onClick={() => handleAlbumClick(album)}
-              className={`group overflow-hidden rounded-2xl border transition ${
+              className={`group overflow-hidden rounded-2xl border bg-white/2 transition duration-300 hover:-translate-y-1 hover:bg-white/5 ${
                 selectedAlbum?.title === album.title
                   ? "border-violet-500"
                   : "border-white/10"
@@ -45,14 +45,14 @@ export default function AlbumsPanel({
       </div>
 
       {selectedAlbum && (
-        <div className="flex-1 overflow-y-auto">
-          <h2 className="mb-4 text-xl font-semibold text-white">Songs</h2>
+        <div className="mt-2 pr-1">
+          <h2 className="mb-4 border-b border-white/5 pb-3 text-xl font-semibold text-white">Songs</h2>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {selectedAlbum.songs.map((song, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between rounded-2xl border border-white/5 bg-white/5 p-4"
+                className="flex items-center justify-between rounded-xl border border-white/4 bg-white/2.5 p-3"
               >
                 <div>
                   <p className="font-medium text-white">{song.name}</p>

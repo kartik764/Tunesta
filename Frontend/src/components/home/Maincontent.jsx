@@ -13,14 +13,14 @@ const Maincontent = ({
   isSearchMode,
 }) => {
   return (
-    <main className="relative flex-1 overflow-y-auto">
+    <main className="relative overflow-x-hidden">
       {/* Ambient Background Glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 left-20 h-72 w-72 rounded-full bg-violet-600/10 blur-3xl" />
         <div className="absolute top-96 right-0 h-96 w-96 rounded-full bg-fuchsia-600/5 blur-3xl" />
       </div>
 
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 py-8 lg:px-10">
+      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-1 py-1 sm:gap-8 sm:px-2 lg:px-4">
         {/* Welcome Banner */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}

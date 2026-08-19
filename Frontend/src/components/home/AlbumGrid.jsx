@@ -17,7 +17,7 @@ function AlbumGrid({
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex min-h-80 flex-col items-center justify-center rounded-3xl border border-white/10 bg-[#111118]/80 p-10 text-center backdrop-blur-2xl"
+        className="flex min-h-64 flex-col items-center justify-center rounded-3xl border border-white/10 bg-[#111118]/80 p-6 text-center backdrop-blur-2xl sm:min-h-80 sm:p-10"
       >
         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-violet-500/10">
           <SearchX
@@ -99,7 +99,7 @@ function AlbumGrid({
         }}
         initial="hidden"
         animate="show"
-        className="grid gap-7 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
+        className="grid max-h-190 grid-cols-1 gap-4 overflow-y-auto sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5"
       >
         {albums.map((album) => (
           <motion.div
@@ -128,7 +128,7 @@ function AlbumGrid({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="flex items-center justify-center gap-3 rounded-2xl border border-white/10 bg-[#111118]/60 px-6 py-4 text-zinc-400 backdrop-blur-xl"
+        className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#111118]/60 px-4 py-4 text-center text-zinc-400 backdrop-blur-xl sm:flex-row sm:gap-3 sm:px-6 sm:text-left"
       >
         <Music2
           size={18}

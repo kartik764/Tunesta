@@ -435,8 +435,13 @@ const Room = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090F] text-white">
-      <div className="mx-auto flex max-w-[1700px] flex-col gap-6 p-6 pb-36">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#09090F] text-white">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-violet-600/10 blur-3xl" />
+        <div className="absolute top-1/3 -right-32 h-96 w-96 rounded-full bg-fuchsia-600/5 blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto flex w-full max-w-[1700px] flex-col gap-6 p-3 pb-8 sm:p-5 sm:pb-10 lg:p-6 lg:pb-12">
         <RoomHeader
           roomId={roomId}
           isHost={isHost}
@@ -444,7 +449,7 @@ const Room = () => {
           leaveRoom={handleLeaveRoom}
         />
 
-        <div className="grid flex-1 grid-cols-[280px_minmax(0,1fr)_280px] gap-6">
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-[240px_minmax(0,1fr)_240px] xl:gap-8">
           <QueuePanel
             queue={queue}
             isHost={isHost}

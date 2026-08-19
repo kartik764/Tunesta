@@ -27,15 +27,15 @@ function Topbar({ handlehamburgerclick, currentSong, roomId }) {
       initial={{ opacity: 0, y: -18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="relative mb-8 overflow-hidden rounded-3xl border border-white/10 bg-[#111118]/80 backdrop-blur-2xl"
+      className="relative shrink-0 overflow-hidden rounded-3xl border border-white/10 bg-[#111118]/80 backdrop-blur-2xl"
     >
       {/* Ambient Glow */}
       <div className="pointer-events-none absolute -left-16 top-0 h-36 w-36 rounded-full bg-violet-600/20 blur-3xl" />
       <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 rounded-full bg-fuchsia-600/10 blur-3xl" />
 
-      <div className="relative flex items-center justify-between px-6 py-4">
+      <div className="relative flex items-center justify-between gap-3 px-4 py-3 sm:px-6 sm:py-4">
         {/* Left */}
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-4">
           <motion.button
             whileHover={{
               scale: 1.08,
@@ -45,12 +45,12 @@ function Topbar({ handlehamburgerclick, currentSong, roomId }) {
               scale: 0.94,
             }}
             onClick={handlehamburgerclick}
-            className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-300 transition-all duration-300 hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-zinc-300 transition-all duration-300 hover:border-violet-500/40 hover:bg-violet-500/10 hover:text-white lg:hidden"
           >
             <Menu size={20} />
           </motion.button>
 
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <Sparkles size={15} className="text-violet-400" />
 
@@ -59,17 +59,17 @@ function Topbar({ handlehamburgerclick, currentSong, roomId }) {
               </span>
             </div>
 
-            <div className="mt-1 flex items-center gap-3">
+            <div className="mt-1 flex min-w-0 items-center gap-2 sm:gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 text-violet-400">
                 {currentSong ? <Volume2 size={18} /> : <Music2 size={18} />}
               </div>
 
-              <div>
-                <h2 className="max-w-sm truncate text-base font-semibold text-white">
+              <div className="min-w-0">
+                <h2 className="max-w-[10rem] truncate text-base font-semibold text-white sm:max-w-sm">
                   {currentSong ? currentSong.name : "No song playing"}
                 </h2>
 
-                <p className="text-sm text-zinc-400">
+                <p className="truncate text-xs text-zinc-400 sm:text-sm">
                   {currentSong
                     ? "Streaming with your room"
                     : "Choose a song to begin"}
@@ -80,7 +80,7 @@ function Topbar({ handlehamburgerclick, currentSong, roomId }) {
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-4">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-4">
           {/* Live Badge */}
           <motion.div
             animate={{

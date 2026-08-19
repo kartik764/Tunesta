@@ -11,7 +11,7 @@ function AlbumCard({
 
   return (
     <motion.div
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -4 }}
       transition={{ duration: 0.25 }}
       onClick={() => handleAlbumClick(album)}
       className="group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-[#111118]/80 backdrop-blur-xl"
@@ -34,11 +34,11 @@ function AlbumCard({
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileHover={{}}
-          className="absolute bottom-5 right-5"
+          className="absolute bottom-4 right-4"
         >
-          <button className="flex h-14 w-14 translate-y-4 items-center justify-center rounded-full bg-linear-to-br from-violet-500 to-purple-600 text-white shadow-xl shadow-violet-900/40 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <button className="flex h-11 w-11 translate-y-4 items-center justify-center rounded-full bg-linear-to-br from-violet-500 to-purple-600 text-white shadow-xl shadow-violet-900/40 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
             <Play
-              size={22}
+              size={18}
               fill="currentColor"
               className="ml-1"
             />
@@ -46,7 +46,7 @@ function AlbumCard({
         </motion.div>
 
         {/* Album Badge */}
-        <div className="absolute left-4 top-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/40 px-3 py-1.5 backdrop-blur-md">
+        <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-2.5 py-1 backdrop-blur-md">
           <Disc3
             size={14}
             className="text-violet-400"
@@ -58,7 +58,7 @@ function AlbumCard({
         </div>
 
         {/* Bottom Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-5">
+        <div className="absolute bottom-0 left-0 right-0 p-4">
           <div className="flex items-center gap-2 text-zinc-300">
             <Music2
               size={15}
@@ -70,19 +70,19 @@ function AlbumCard({
             </span>
           </div>
 
-          <h3 className="mt-2 line-clamp-1 text-xl font-semibold text-white">
+          <h3 className="mt-1 line-clamp-1 text-lg font-semibold text-white">
             {album.title}
           </h3>
         </div>
       </div>
 
       {/* Details */}
-      <div className="space-y-4 p-5">
-        <p className="line-clamp-2 text-sm leading-6 text-zinc-400">
+      <div className="space-y-3 p-4">
+        <p className="line-clamp-2 text-xs leading-5 text-zinc-400">
           {album.description}
         </p>
 
-        <div className="flex items-center justify-between border-t border-white/5 pt-4">
+        <div className="flex items-center justify-between border-t border-white/5 pt-3">
           <span className="text-xs uppercase tracking-[0.25em] text-zinc-500">
             Ready to Play
           </span>

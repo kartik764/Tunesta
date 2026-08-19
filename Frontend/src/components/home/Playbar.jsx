@@ -50,7 +50,7 @@ const Playbar = ({
   });
 
   return (
-    <div className="sticky bottom-0 mt-6 rounded-3xl border border-white/10 bg-[#111118]/90 backdrop-blur-2xl px-6 py-5">
+    <div className="rounded-t-3xl border border-b-0 border-white/10 bg-[#111118]/95 px-3 py-1.5 backdrop-blur-2xl sm:px-5 sm:py-2">
       <Seekbar
         currentTime={currentTime}
         duration={duration}
@@ -60,12 +60,12 @@ const Playbar = ({
         isListener={isListener}
       />
 
-      <div className="mt-5 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div className="lg:w-1/3">
+      <div className="mt-1 grid gap-1 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:items-center">
+        <div className="min-w-0">
           <SongInfo currentSong={currentSong} />
         </div>
 
-        <div className="flex justify-center lg:w-1/3">
+        <div className="flex justify-center">
           <PlaybackControls
             roomId={roomId}
             isHost={isHost}
@@ -80,7 +80,7 @@ const Playbar = ({
           />
         </div>
 
-        <div className="flex justify-end lg:w-1/3">
+        <div className="flex justify-center md:justify-end">
           <VolumeControl
             volume={volume}
             setVolume={setVolume}

@@ -46,7 +46,7 @@ function VolumeControl({
         value={volume}
         disabled={isListener}
         onChange={handleVolumeChange}
-        className="h-1.5 w-28 cursor-pointer appearance-none rounded-full bg-white/10 accent-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
+        className="h-1.5 w-24 cursor-pointer appearance-none rounded-full bg-white/10 accent-violet-500 sm:w-28 disabled:cursor-not-allowed disabled:opacity-50"
       />
     </div>
   );

@@ -27,14 +27,14 @@ function RoomPanel({
 
       <div className="relative p-6">
         {/* Header */}
-        <div className="flex items-start justify-between">
-          <div>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-violet-500/15 text-violet-400">
                 <Users size={20} />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <h3 className="text-lg font-semibold text-white">
                   Music Rooms
                 </h3>
@@ -45,7 +45,7 @@ function RoomPanel({
             </div>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+          <div className="flex shrink-0 items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
             <Radio size={12} />
             Live
           </div>
@@ -114,8 +114,8 @@ function RoomPanel({
           whileHover={{ scale: 1.01 }}
           className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4"
         >
-          <div className="flex items-center justify-between">
-            <div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
               <p className="text-sm font-medium text-white">
                 Start a collaborative session
               </p>
@@ -126,7 +126,7 @@ function RoomPanel({
               </p>
             </div>
 
-            <div className="rounded-xl bg-violet-500/15 p-3 text-violet-400">
+            <div className="shrink-0 rounded-xl bg-violet-500/15 p-3 text-violet-400">
               <Users size={20} />
             </div>
           </div>

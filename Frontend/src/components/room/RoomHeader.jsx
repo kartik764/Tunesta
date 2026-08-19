@@ -17,9 +17,12 @@ export default function RoomHeader({
   };
 
   return (
-    <div className="rounded-3xl border border-white/10 bg-[#111118]/80 backdrop-blur-xl p-6">
-      <div className="flex flex-wrap items-center justify-between gap-6">
-        <div className="flex flex-wrap items-center gap-8">
+    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#111118]/80 p-4 shadow-xl shadow-black/20 backdrop-blur-2xl sm:p-6">
+      <div className="pointer-events-none absolute -left-16 top-0 h-36 w-36 rounded-full bg-violet-600/15 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 rounded-full bg-fuchsia-600/10 blur-3xl" />
+
+      <div className="relative flex flex-wrap items-center justify-between gap-4 sm:gap-6">
+        <div className="flex min-w-0 flex-wrap items-center gap-5 sm:gap-8">
           {/* Host */}
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-500/15 text-violet-400">
@@ -83,7 +86,7 @@ export default function RoomHeader({
 
         <button
           onClick={leaveRoom}
-          className="flex items-center gap-2 rounded-2xl bg-red-500/15 px-5 py-3 font-medium text-red-400 transition hover:bg-red-500/25"
+          className="flex items-center gap-2 rounded-2xl border border-red-500/20 bg-red-500/10 px-5 py-3 font-medium text-red-400 transition hover:bg-red-500 hover:text-white"
         >
           <LogOut size={18} />
           Leave Room

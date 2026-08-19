@@ -27,11 +27,11 @@ const Sidebar = ({
   const username = email.split("@")[0];
 
   return (
-    <aside className="flex h-full w-80 flex-col border-r border-white/10 bg-[#0A0A10] text-white">
+    <aside className="min-h-screen w-full border-r border-white/10 bg-[#0A0A10] text-white">
 
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b border-white/10 p-6">
+      <div className="flex items-center justify-between border-b border-white/10 p-5">
 
         <div>
 
@@ -56,7 +56,7 @@ const Sidebar = ({
 
       {/* Profile */}
 
-      <div className="m-5 rounded-3xl border border-white/10 bg-white/5 p-5">
+      <div className="m-4 rounded-2xl border border-white/10 bg-white/5 p-4">
 
         <div className="flex items-center gap-4">
 
@@ -82,7 +82,7 @@ const Sidebar = ({
 
       {/* Navigation */}
 
-      <div className="px-5">
+      <div className="px-4">
 
         <p className="mb-3 text-xs uppercase tracking-widest text-zinc-500">
           Navigation
@@ -92,7 +92,7 @@ const Sidebar = ({
 
           <button
             onClick={() => setIsSearchMode(false)}
-            className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 transition ${
+            className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 transition ${
               !isSearchMode
                 ? "bg-violet-600 text-white"
                 : "hover:bg-white/5 text-zinc-300"
@@ -120,7 +120,7 @@ const Sidebar = ({
 
       {/* Room */}
 
-      <div className="px-5 pt-6">
+      <div className="px-4 pt-4">
 
         <RoomPanel
           roomInput={roomInput}
@@ -133,13 +133,13 @@ const Sidebar = ({
 
       {/* Upload */}
 
-      <div className="px-5 pt-6">
+      <div className="px-4 pt-4">
 
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleOpenUpload}
-          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-5 py-4 font-semibold shadow-lg shadow-violet-900/40"
+          className="flex w-full items-center justify-center gap-3 rounded-2xl bg-linear-to-r from-violet-600 to-fuchsia-600 px-4 py-3 font-semibold shadow-lg shadow-violet-900/40"
         >
           <Upload size={18} />
           Upload Music
@@ -149,7 +149,7 @@ const Sidebar = ({
 
       {/* Library */}
 
-      <div className="mt-8 flex-1 overflow-hidden px-5">
+      <div className="mt-5 px-4 pb-4">
 
         <div className="mb-5 flex items-center gap-2">
 
@@ -164,7 +164,7 @@ const Sidebar = ({
 
         </div>
 
-        <div className="space-y-3 overflow-y-auto pr-2">
+        <div className="space-y-3 pr-2">
 
           {songs.length === 0 && (
             <div className="rounded-2xl border border-dashed border-white/10 p-6 text-center text-sm text-zinc-500">
@@ -177,7 +177,7 @@ const Sidebar = ({
               key={song.path}
               whileHover={{ x: 4 }}
               onClick={() => handlesongclick(song, index)}
-              className="flex w-full items-center justify-between rounded-2xl border border-white/5 bg-white/3 p-4 text-left transition hover:border-violet-500/30 hover:bg-white/5"
+              className="flex w-full items-center justify-between rounded-2xl border border-white/5 bg-white/3 p-3 text-left transition hover:border-violet-500/30 hover:bg-white/5"
             >
               <div className="flex items-center gap-3">
 

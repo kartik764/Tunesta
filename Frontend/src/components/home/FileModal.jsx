@@ -71,7 +71,7 @@ const FileModal = ({ isUploadOpen, handleCloseUpload, fetchalbums }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4"
+        className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/70 p-3 backdrop-blur-md sm:items-center sm:p-6"
       >
         <motion.div
           initial={{
@@ -91,7 +91,7 @@ const FileModal = ({ isUploadOpen, handleCloseUpload, fetchalbums }) => {
           transition={{
             duration: 0.25,
           }}
-          className="relative w-full max-w-xl rounded-3xl border border-white/10 bg-[#111118] p-8 shadow-2xl"
+          className="relative my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-xl overflow-y-auto rounded-3xl border border-white/10 bg-[#111118] p-5 shadow-2xl sm:max-h-[calc(100dvh-3rem)] sm:p-8"
         >
           <button
             onClick={handleCloseUpload}

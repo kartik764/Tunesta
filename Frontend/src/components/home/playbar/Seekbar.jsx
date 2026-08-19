@@ -16,7 +16,7 @@ function Seekbar({
       : 0;
 
   return (
-    <div className="mb-5">
+    <div className="mb-1">
       <div
         onClick={handleSeek}
         className={`group relative h-1.5 w-full rounded-full bg-white/10 transition ${
@@ -38,7 +38,7 @@ function Seekbar({
         />
       </div>
 
-      <div className="mt-2 flex items-center justify-between text-xs text-zinc-400">
+      <div className="mt-1 flex items-center justify-between text-xs text-zinc-400">
         <span>{currentTime}</span>
         <span>{duration}</span>
       </div>
