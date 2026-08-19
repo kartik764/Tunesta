@@ -1,315 +1,146 @@
 # 🎵 Tunesta — Real-Time Collaborative Music Streaming Platform
 
-![React](https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge\&logo=react)
-![Node.js](https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge\&logo=node.js)
-![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen?style=for-the-badge\&logo=mongodb)
-![Socket.IO](https://img.shields.io/badge/Realtime-Socket.IO-black?style=for-the-badge\&logo=socket.io)
+![React](https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge&logo=react)
+![Node.js](https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge&logo=node.js)
+![MongoDB](https://img.shields.io/badge/Database-MongoDB-darkgreen?style=for-the-badge&logo=mongodb)
+![Socket.IO](https://img.shields.io/badge/Realtime-Socket.IO-black?style=for-the-badge&logo=socket.io)
+![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?style=for-the-badge&logo=vercel)
+![Render](https://img.shields.io/badge/Backend-Render-46E3B7?style=for-the-badge&logo=render)
 
-> A full-stack real-time collaborative music streaming platform where users can create rooms, join friends, and listen to music together in sync.
+> A full-stack real-time collaborative music streaming platform where users can create rooms, invite friends, and listen to music together in sync.
 
 ---
 
-# 🚀 Live Demo
+## 🚀 Live Demo
 
 ### 🌐 Frontend
 
-https://tunesta.vercel.app
+**https://tunesta.vercel.app**
 
 ### ⚙️ Backend
 
-https://tunesta-production.up.railway.app
+**https://tunesta-backend.onrender.com**
 
 ---
 
-# 📖 About The Project
+## 📖 About The Project
 
-Tunesta is a real-time collaborative music player inspired by modern social streaming platforms.
+Tunesta is a full-stack collaborative music streaming platform designed to allow multiple users to listen to music together inside shared rooms.
 
-The platform allows users to:
+A host can control playback while other users connected to the room receive real-time updates through Socket.IO.
 
-* create rooms
-* invite listeners
-* synchronize music playback
-* manage song queues
-* experience real-time music streaming together
+The project focuses on building a real-time application where traditional REST APIs are combined with persistent Socket.IO connections to synchronize room state, playback, users, and queues.
 
-The application was built using a decoupled full-stack architecture with Socket.IO powering real-time synchronization between host and listeners.
+### What Tunesta allows users to do
 
----
-
-# ✨ Core Features
-
-## 🔐 Authentication System
-
-* User Signup & Login
-* JWT-based authentication
-* Secure password hashing using bcryptjs
-* Protected routes
+- Create music rooms
+- Join existing rooms
+- Browse albums and songs
+- Play music together
+- Synchronize playback between users
+- Manage a shared queue
+- See users currently connected to a room
+- Control playback as the room host
 
 ---
 
-## 🎵 Music Streaming Features
+# ✨ Features
 
-* Browse albums & songs
-* Real-time synchronized playback
-* Host-controlled playback system
-* Play / Pause synchronization
-* Queue-based music management
-* Volume control
+## 🔐 Authentication
 
----
-
-## 👥 Real-Time Room System
-
-* Create room
-* Join room using Room ID
-* Live room user updates
-* Host & listener architecture
-* Real-time playback synchronization
-* Multi-user room support
+- User registration
+- User login
+- JWT-based authentication
+- Password hashing using bcryptjs
+- Protected API routes
+- Persistent authenticated session on the frontend
 
 ---
 
-## ⚡ Socket.IO Real-Time Engine
+## 🎵 Music Streaming
 
-* Real-time music synchronization
-* Queue updates across clients
-* Instant playback events
-* Real-time room communication
-* Automatic reconnection support
+- Browse albums
+- Browse songs within albums
+- Play songs from albums
+- Host-controlled playback
+- Play / pause synchronization
+- Volume control
+- Automatic song progression
+- Shared music queue
+- Add songs to queue
+- Remove songs from queue
+- Prevent duplicate/current-song queue conflicts
 
 ---
 
-# 🛠️ Tech Stack
+## 👥 Real-Time Music Rooms
 
-| Domain          | Technologies         |
-| :-------------- | :------------------- |
-| Frontend        | React.js, Vite, CSS3 |
-| Backend         | Node.js, Express.js  |
-| Database        | MongoDB Atlas        |
-| Real-Time       | Socket.IO            |
-| Authentication  | JWT, bcryptjs        |
-| Deployment      | Vercel, Railway      |
-| Version Control | Git, GitHub          |
+- Create a room
+- Join a room using a Room ID
+- Live connected-user updates
+- Host and listener roles
+- Host-controlled playback
+- Real-time playback events
+- Real-time queue updates
+- Host management
+- Host transfer when required
+- Multiple users listening simultaneously
+
+---
+
+## ⚡ Real-Time Communication
+
+Tunesta uses **Socket.IO** for communication between connected users.
+
+Real-time events are used for:
+
+- Joining rooms
+- Tracking connected users
+- Playback control
+- Queue updates
+- Volume changes
+- Playing the next song
+- Removing songs from queues
+- Disconnect handling
+- Host management
+
+---
+
+## ☁️ Cloud Media Storage
+
+Tunesta integrates with **Cloudinary** for cloud-based media storage.
+
+This allows uploaded media to be handled independently from the application server.
 
 ---
 
 # 🏗️ System Architecture
 
-The application uses a full-stack client-server architecture:
-
-## Frontend (React)
-
-* Handles UI rendering
-* Sends API requests
-* Maintains room state
-* Synchronizes playback using Socket.IO
-
-## Backend (Express + Socket.IO)
-
-* Handles authentication
-* Manages rooms
-* Synchronizes music playback
-* Maintains queue state
-* Broadcasts real-time events
-
-## Database (MongoDB)
-
-* Stores users
-* Stores albums
-* Stores songs metadata
-
----
-
-# 🧠 Major Engineering Challenges Solved
-
-## 1️⃣ Real-Time Music Synchronization
-
-### Problem
-
-Different users experienced playback delay and desynchronization.
-
-### Solution
-
-Implemented Socket.IO-based event broadcasting with timestamp compensation logic to synchronize playback across clients.
-
----
-
-## 2️⃣ Room User Duplication Bug
-
-### Problem
-
-Refreshing caused duplicate users inside rooms.
-
-### Solution
-
-Added existing-user detection and socket ID replacement logic instead of pushing duplicate users.
-
----
-
-## 3️⃣ Queue Synchronization Logic
-
-### Problem
-
-Queue updates were inconsistent across listeners.
-
-### Solution
-
-Implemented centralized queue state management on backend with live `queue_updated` socket events.
-
----
-
-## 4️⃣ Production Deployment Debugging
-
-### Problem
-
-Application failed during Railway deployment due to missing dependencies and environment variables.
-
-### Solution
-
-Resolved:
-
-* bcryptjs missing dependency
-* jsonwebtoken dependency issue
-* MongoDB URI configuration
-* JWT_SECRET configuration
-* Railway monorepo root directory setup
-
----
-
-## 5️⃣ Frontend Production Configuration
-
-### Problem
-
-Frontend still used localhost URLs after deployment.
-
-### Solution
-
-Implemented environment-variable-based API architecture using:
-
-```env
-VITE_API_URL
-```
-
----
-
-# 📂 Project Structure
-
-```bash
-Tunesta/
-│
-├── Backend/
-│   ├── middleware/
-│   ├── models/
-│   ├── songs/
-│   ├── server.js
-│   └── package.json
-│
-├── Frontend/
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-└── README.md
-```
-
----
-
-# ⚙️ Environment Variables
-
-## Frontend (.env)
-
-```env
-VITE_API_URL=https://tunesta-production.up.railway.app
-```
-
----
-
-## Backend (.env)
-
-```env
-MONGODB_URI=YOUR_MONGODB_URI
-JWT_SECRET=YOUR_SECRET_KEY
-PORT=5000
-```
-
----
-
-# 🚀 Local Setup
-
-## 1️⃣ Clone Repository
-
-```bash
-git clone https://github.com/kartik764/Tunesta.git
-```
-
----
-
-## 2️⃣ Setup Backend
-
-```bash
-cd Backend
-npm install
-npm start
-```
-
----
-
-## 3️⃣ Setup Frontend
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
----
-
-# 🌐 Deployment
-
-| Service  | Platform      |
-| :------- | :------------ |
-| Frontend | Vercel        |
-| Backend  | Railway       |
-| Database | MongoDB Atlas |
-
----
-
-# 📸 Screenshots
-
-Add screenshots here:
-
-* Login Page
-* Home Page
-* Room Interface
-* Queue System
-* Multi-user Sync
-
----
-
-# 🔮 Future Improvements
-
-* Real-time chat feature
-* Persistent rooms
-* Mobile responsiveness
-* Playlist support
-* Better queue system
-* Music seek synchronization
-* Spotify-inspired UI
-* Cloud music uploads
-
----
-
-# 👨‍💻 Author
-
-## Kartik Jain
-
-### GitHub
-
-https://github.com/kartik764
-
----
-
-# ⭐ Support
-
-If you liked this project, consider giving it a star ⭐ on GitHub.
+Tunesta follows a decoupled full-stack architecture.
+
+```text
+                         ┌──────────────────────┐
+                         │     React + Vite     │
+                         │      Frontend        │
+                         └──────────┬───────────┘
+                                    │
+                         ┌──────────┴───────────┐
+                         │                      │
+                      REST API              Socket.IO
+                         │                      │
+                         ▼                      ▼
+                ┌──────────────────────────────────┐
+                │       Node.js + Express           │
+                │                                  │
+                │  Authentication                  │
+                │  Room Management                  │
+                │  Music Management                 │
+                │  Queue Management                 │
+                │  Socket.IO Server                 │
+                └──────────────┬───────────┬───────┘
+                               │           │
+                               ▼           ▼
+                       ┌────────────┐  ┌────────────┐
+                       │  MongoDB   │  │ Cloudinary │
+                       │   Atlas    │  │            │
+                       └────────────┘  └────────────┘
